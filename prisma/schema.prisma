@@ -23,35 +23,56 @@ model Company {
   updatedAt DateTime @default(now())
 
   users User[]
+  leave Leave[]
 }
 
 model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  name      String?
-  email     String  @unique
-  password  String
-  companyId String  @db.ObjectId
-  role      Role    @default(Staff)
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String?
+  email      String
+  password   String
+  companyId  String     @db.ObjectId
+  role       Role       @default(Staff)
+  department Department @default(dev)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  Company   Company  @relation(fields: [companyId], references: [id])
+
+  leave Leave[]
+
+  @@index([companyId, email])
+}
+
+model Leave {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String
+  startDate   DateTime
+  endDate     DateTime
+  title       String
+  description String
+  status      Status   @default(Pending)
+  userId      String?  @db.ObjectId
+  companyId   String?  @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  Company Company @relation(fields: [companyId], references: [id])
-
-  leave Leave[]
+  User    User?    @relation(fields: [userId], references: [id])
+  Company Company? @relation(fields: [companyId], references: [id])
 
   @@index([companyId])
 }
 
-model Leave {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  leaveDate   String
-  title       String
-  description String
-  status      Status  @default(Pending)
-  userId      String? @db.ObjectId
+model Invitations {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  email      String     @unique
+  isActive   Boolean    @default(true)
+  department Department @default(dev)
+  companyId  String
 
-  User User? @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 enum Role {
@@ -63,6 +84,12 @@ enum Status {
   Pending
   IsApproved
   Rejected
+}
+
+enum Department {
+  dev
+  designer
+  manager
 }
 
 //npx prisma db push

@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma"
 import { logIn } from "@/services/user"
-
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { User } from "@prisma/client"
 import { NextAuthOptions } from "next-auth"
@@ -27,6 +26,8 @@ export const authOptions: NextAuthOptions = {
         const user = data.user as User
 
         if (!user) {
+          console.log("User doesn't found")
+
           throw new Error(data.message)
         }
 
@@ -44,7 +45,7 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
 
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       // Destructure user from the session callback
       const { user: sessionUser, ...rest } = session
       const t = token as unknown as any

@@ -1,22 +1,25 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 
 import { toast } from "@/components/ui/use-toast"
-import { register } from "@/services/user"
+import { signUp } from "@/services/user"
+import { Invitations } from "@prisma/client"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-const signupPage = () => {
+
+interface WidgetSignUpPageProps {
+  invitation: Invitations
+}
+const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   const [name, setName] = useState<string>("")
-  const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [retypedPassword, setRetypedPassword] = useState<string>("")
-
+  const email = invitation.email
   const router = useRouter()
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!name || !email || !password || !retypedPassword) {
+    if (!name || !password || !retypedPassword) {
       return toast({
         variant: "destructive",
         description: "All fields are required"
@@ -29,11 +32,14 @@ const signupPage = () => {
       })
     }
     try {
-      const result = await register({
-        email,
+      const result = await signUp({
+        email: invitation.email,
         password,
         name,
-        retypedPassword
+        department: invitation.department,
+        companyId: invitation.companyId,
+        retypePassword: retypedPassword,
+        invitaionId: invitation.id
       })
       if (result?.error) {
         toast({
@@ -44,7 +50,7 @@ const signupPage = () => {
         return
       }
       const resultSign = await signIn("credentials", {
-        email,
+        email: invitation.email,
         password,
         redirect: false
       })
@@ -66,14 +72,16 @@ const signupPage = () => {
       })
     }
   }
+
   return (
-    <div className="mx-auto w-[260px]">
-      <h1 className="font-bricolage text-[20px] font-bold ">Sign a company</h1>
+    <div>
+      <h1>{email} most welcome</h1>
       <form
         action=""
         onSubmit={onSubmitHandler}
-        className="flex flex-col space-y-4 "
+        className="flex flex-col space-y-2 w-[250px] py-12"
       >
+        <label htmlFor="">Name:</label>
         <input
           type="text"
           placeholder="Type name ..."
@@ -81,14 +89,7 @@ const signupPage = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-        <input
-          type="email"
-          placeholder="Type Email ..."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
+        <label htmlFor="">password:</label>
         <input
           type="text"
           placeholder="Type password .."
@@ -96,6 +97,8 @@ const signupPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
+        <label htmlFor="">Retype password:</label>
         <input
           type="text"
           placeholder="Type Retype password .."
@@ -112,4 +115,4 @@ const signupPage = () => {
   )
 }
 
-export default signupPage
+export default WidgetSignUpPage

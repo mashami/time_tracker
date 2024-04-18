@@ -1,9 +1,4 @@
-import { Button } from "@/components/ui/button"
-
+// command to remove nodemodules:  rm -rf node_modules .next yarn.lock
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Button>Test Button</Button>
-    </main>
-  )
+  return <main className=""></main>
 }
