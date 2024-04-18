@@ -4,7 +4,7 @@ export const shadcnPlugin = plugin(
   ({ addBase }) => {
     addBase({
       ":root": {
-        "--background": "0 0% 94%",
+        "--background": "100 100% 100%",
         "--foreground": "0 0% 23%",
 
         "--muted": "210 40% 96.1%",
@@ -66,6 +66,10 @@ export const shadcnPlugin = plugin(
       },
 
       extend: {
+        fontFamily: {
+          ibm_plex_mono: [`var(--font-ibm-plex-mono)`],
+          bricolage: [`var(--font-bricolage-grotesque)`]
+        },
         colors: {
           border: "hsl(var(--border))",
           input: "hsl(var(--input))",

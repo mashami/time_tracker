@@ -4,11 +4,25 @@ import { hash } from "bcrypt"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { name, email, password, retypePassword, companyId } = await req.json()
+  const {
+    name,
+    email,
+    department,
+    password,
+    invitaionId,
+    retypePassword,
+    companyId
+  } = await req.json()
 
-  if (!name || !email || !password || !retypePassword) {
+  if (!name || !department || !email || !password || !retypePassword) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
+      { status: HttpStatusCode.BAD_REQUEST }
+    )
+  }
+  if (!invitaionId) {
+    return NextResponse.json(
+      { error: true, message: "Invitation ID is required" },
       { status: HttpStatusCode.BAD_REQUEST }
     )
   }
@@ -65,7 +79,8 @@ export async function POST(req: Request) {
         email,
         role: "Staff",
         companyId,
-        password: hashedPassword
+        password: hashedPassword,
+        department
       }
     })
 
@@ -75,6 +90,14 @@ export async function POST(req: Request) {
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }
+
+    await prisma.invitations.update({
+      where: { id: invitaionId },
+      data: {
+        isActive: false,
+        updatedAt: new Date()
+      }
+    })
 
     return NextResponse.json(
       {

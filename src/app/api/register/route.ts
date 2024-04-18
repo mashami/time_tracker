@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { HttpStatusCode } from "@/utils/enums"
 import { hash } from "bcrypt"
-
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
@@ -24,6 +23,8 @@ export async function POST(req: Request) {
   }
 
   try {
+    console.log("reached hereeeeee")
+
     // Check if Email already exists in DB
     const companyWithEmail = await prisma.company.findFirst({
       where: { email }
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
     // Hash password
     const hashedPassword = await hash(password, 10)
 
-    // Save user in DB
+    // Save Company in DB
     const company = await prisma.company.create({
       data: {
         email,
@@ -80,7 +81,7 @@ export async function POST(req: Request) {
     )
   } catch (error) {
     return NextResponse.json(
-      { error: true, message: "An error occured. Please try again." },
+      { error: true, message: "An error occured. Please try again" },
       { status: HttpStatusCode.INTERNAL_SERVER }
     )
   }

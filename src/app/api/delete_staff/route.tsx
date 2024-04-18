@@ -1,0 +1,61 @@
+import { prisma } from "@/lib/prisma"
+import { HttpStatusCode } from "@/utils/enums"
+import { sendMail } from "@/utils/mailService"
+
+import { NextResponse } from "next/server"
+
+export async function POST(req: Request) {
+  const { userId, companyID } = await req.json()
+
+  if (!userId || !companyID) {
+    return NextResponse.json(
+      { error: true, message: "User ID and Company ID are required" },
+      { status: HttpStatusCode.BAD_REQUEST }
+    )
+  }
+
+  try {
+    const checkUserExit = await prisma.user.findFirst({
+      where: { id: userId, companyId: companyID }
+    })
+
+    if (checkUserExit) {
+      const email = checkUserExit.email
+
+      const company = await prisma.company.findFirst({
+        where: { id: companyID }
+      })
+
+      try {
+        await prisma.leave.deleteMany({
+          where: { companyId: companyID, userId: userId }
+        })
+        console.log("Deletion successful")
+      } catch (error) {
+        console.error("Error deleting records:", error)
+      }
+
+      await prisma.user.delete({
+        where: { id: userId, companyId: companyID }
+      })
+
+      await prisma.invitations.delete({
+        where: { email: email, companyId: companyID }
+      })
+
+      const emailContent = ` You are no longer in ${company?.name} company`
+
+      await sendMail(`${company?.name} company Email`, email, emailContent)
+
+      return NextResponse.json(
+        { message: "Delete staff successfully" },
+        { status: HttpStatusCode.OK }
+      )
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: true, message: "An error occured. Please try again." },
+      { status: HttpStatusCode.INTERNAL_SERVER }
+    )
+  }
+}
