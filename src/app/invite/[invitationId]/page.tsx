@@ -15,7 +15,6 @@ const invitePage = async ({ params: { invitationId } }: invitePageProps) => {
   if (!invitationData.error) {
     return (
       <div>
-        <h1>Welcome Staff </h1>
         <WidgetSignUpPage invitation={invitationData.data} />
       </div>
     )

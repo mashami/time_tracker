@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
   try {
     const InvitedUsers = await prisma.invitations.findMany({
-      where: { companyId }
+      where: { companyId },
+      orderBy: { createdAt: "desc" }
     })
 
     if (!InvitedUsers) {

@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
   try {
     const leaves = await prisma.leave.findMany({
-      where: { companyId }
+      where: { companyId },
+      orderBy: { createdAt: "desc" }
     })
 
     if (!leaves) {
@@ -33,6 +34,8 @@ export async function POST(req: Request) {
       { status: HttpStatusCode.OK }
     )
   } catch (error) {
+    console.log()
+
     return NextResponse.json(
       { error: true, message: "An error occured. Please try again." },
       { status: HttpStatusCode.INTERNAL_SERVER }

@@ -31,6 +31,7 @@ export interface SignupType {
 
 export interface SvgTypes {
   className?: string
+  color?: string
   onClick?: () => void
 }
 
@@ -41,6 +42,7 @@ export interface LeaveType {
   description: string
   userId: string
   companyId: string
+  department: string
 }
 
 export interface changeLeaveTypes {
@@ -51,4 +53,17 @@ export interface changeLeaveTypes {
 export interface getLeavesByUserTypes {
   companyId: string
   userId: string
+}
+
+export interface Department {
+  dev: string
+  designer: string
+  manager: string
+}
+
+export interface AnnouncementTypes {
+  title: string
+  owner: string
+  description: string
+  companyId: string
 }

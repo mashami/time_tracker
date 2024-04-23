@@ -23,8 +23,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    console.log("reached hereeeeee")
-
     // Check if Email already exists in DB
     const companyWithEmail = await prisma.company.findFirst({
       where: { email }

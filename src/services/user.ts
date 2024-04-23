@@ -1,4 +1,5 @@
 import {
+  AnnouncementTypes,
   changeLeaveTypes,
   getLeavesByUserTypes,
   invitationType,
@@ -121,7 +122,8 @@ export const requestLeave = async ({
   startDate,
   endDate,
   description,
-  title
+  title,
+  department
 }: LeaveType) => {
   const response = await fetch(`/api/request_leave`, {
     method: "POST",
@@ -138,7 +140,6 @@ export const requestLeave = async ({
   })
 
   const result = await response.json()
-  console.log(result)
 
   return result
 }
@@ -230,6 +231,42 @@ export const getAllInvitedUSers = async (companyId: string) => {
       cache: "no-store"
     }
   )
+
+  const result = await response.json()
+
+  return result
+}
+
+export const createAnnouncement = async ({
+  companyId,
+  owner,
+  description,
+  title
+}: AnnouncementTypes) => {
+  const response = await fetch(`/api/create_announcement`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      owner,
+      title,
+      description,
+      companyId
+    }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const getAnnouncementCompany = async (companyId: string) => {
+  const response = await fetch(process.env.APP_URL + `/api/get_announcement`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ companyId }),
+    cache: "no-store"
+  })
 
   const result = await response.json()
 

@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { register } from "@/services/user"
 import { signIn } from "next-auth/react"
@@ -67,47 +69,98 @@ const signupPage = () => {
     }
   }
   return (
-    <div className="mx-auto w-[260px]">
-      <h1 className="font-bricolage text-[20px] font-bold ">Sign a company</h1>
-      <form
-        action=""
-        onSubmit={onSubmitHandler}
-        className="flex flex-col space-y-4 "
-      >
-        <input
-          type="text"
-          placeholder="Type name ..."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Type Email ..."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+    <div className="pt-[100px]">
+      <div className="w-[550px] px-[115px] pt-[63px] pb-[40px] mx-auto bg-white rounded-[16px] space-y-6">
+        <div className="space-y-5 text-center">
+          <h1 className="font-bricolage font-bold text-[36px] text-[#006A86]">
+            Time Tracker
+          </h1>
+          <p className="font-medium text-[20px] text-black">
+            Sign Up to your account
+          </p>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Type password .."
-          className="border border-[rgb(255,238,238)] p-2 rounded-md"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Type Retype password .."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={retypedPassword}
-          onChange={(e) => setRetypedPassword(e.target.value)}
-        />
+        <form
+          action=""
+          onSubmit={onSubmitHandler}
+          className="flex flex-col space-y-6"
+        >
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Company name
+            </label>
+            <Input
+              type="text"
+              className="border border-[#Fee] p-2 rounded-md"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </span>
 
-        <button className="bg-green-500 flex items-center rounded-full h-10 w-fit px-4">
-          Sign up
-        </button>
-      </form>
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Email
+            </label>
+            <Input
+              type="email"
+              className="border border-[#Fee] p-2 rounded-md"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </span>
+
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Password
+            </label>
+            <Input
+              type="text"
+              className="border border-[rgb(255,238,238)] p-2 rounded-md"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </span>
+
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Re-type Password
+            </label>
+
+            <Input
+              type="text"
+              className="border border-[#Fee] p-2 rounded-md"
+              value={retypedPassword}
+              onChange={(e) => setRetypedPassword(e.target.value)}
+            />
+          </span>
+          <Button
+            className="text-white w-full"
+            text="Continue"
+            style={{
+              boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
+            }}
+          />
+        </form>
+
+        <span className="text-[14px] leading-5 font-normal flex items-center space-x-1 justify-center">
+          <p className="text-black">Already have an account?</p>
+          <a href="/signin" className="text-[#006A86]">
+            Sign in
+          </a>
+        </span>
+      </div>
     </div>
   )
 }

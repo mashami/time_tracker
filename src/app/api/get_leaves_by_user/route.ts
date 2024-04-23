@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
   try {
     const leaves = await prisma.leave.findMany({
-      where: { companyId, userId }
+      where: { companyId, userId },
+      orderBy: { createdAt: "desc" }
     })
 
     if (!leaves) {

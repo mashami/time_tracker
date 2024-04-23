@@ -14,7 +14,8 @@ export async function POST(req: Request) {
 
   try {
     const invitation = await prisma.invitations.findFirst({
-      where: { id: invitationId }
+      where: { id: invitationId },
+      orderBy: { createdAt: "desc" }
     })
 
     if (!invitation) {

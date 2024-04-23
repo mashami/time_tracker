@@ -1,5 +1,7 @@
 "use client"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 import {
   BreakSvg,
@@ -13,8 +15,12 @@ import {
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
+  const pathName = usePathname()
+
+  console.log(pathName)
+
   return (
-    <div className="h-[98px] w-full flex items-center space-x-7 justify-between">
+    <div className="h-full w-full flex items-center space-x-7 justify-between">
       <h1 className="font-bricolage text-[#006A86] font-bold text-[24px]">
         Time Tracker
       </h1>
@@ -24,18 +30,45 @@ const NavBar = () => {
           borderBottom: "1px solid var(--Gray-200, #EAECF0)"
         }}
       >
-        <li className="flex items-center space-x-2">
-          <HomeSvg />
-          <p className="text-[#667085] text-[14px] font-semibold leading-5">
-            Home
-          </p>
+        <li
+          className={cn(
+            "flex items-center border-b border-transparent",
+            pathName === "/dashboard" && "border-b-[#006A86]"
+          )}
+        >
+          <Link href={"/dashboard"} className="flex items-center space-x-2">
+            <HomeSvg
+              color={pathName === "/dashboard" ? "#006A86" : "#667085"}
+            />
+            <p
+              className={cn(
+                "text-[#667085] text-[14px] font-semibold leading-5",
+                pathName === "/dashboard" && "text-[#006A86]"
+              )}
+            >
+              Home
+            </p>
+          </Link>
         </li>
-        <li className="flex items-center space-x-2">
-          <LeavesSvg />
-          <p className="text-[#667085] text-[14px] font-semibold leading-5">
-            Leaves
-          </p>
+        <li
+          className={cn(
+            "flex items-center border-b border-transparent",
+            pathName === "/leaves" && "border-b-[#006A86]"
+          )}
+        >
+          <Link href={"/leaves"} className="flex items-center space-x-2">
+            <LeavesSvg color={pathName === "/leaves" ? "#006A86" : "#667085"} />
+            <p
+              className={cn(
+                "text-[#667085] text-[14px] font-semibold leading-5",
+                pathName === "/leaves" && "text-[#006A86]"
+              )}
+            >
+              Leaves
+            </p>
+          </Link>
         </li>
+
         <li className="flex items-center space-x-2">
           <ShiftsSvg />
           <p className="text-[#667085] text-[14px] font-semibold leading-5">

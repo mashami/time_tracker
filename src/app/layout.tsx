@@ -1,4 +1,3 @@
-import { NavBar } from "@/components/NavBar"
 import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
@@ -37,15 +36,7 @@ export default function RootLayout({
           bricolage.variable
         )}
       >
-        <div
-          className="px-[4.125rem]"
-          style={{
-            borderBottom: "1px solid #EEE"
-          }}
-        >
-          <NavBar />
-        </div>
-        <div className="px-[4.125rem] pt-[34px]">{children}</div>
+        <div className="bg-[#F9F9F9] h-screen">{children}</div>
         <Toaster />
       </body>
     </html>
