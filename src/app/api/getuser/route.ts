@@ -15,7 +15,8 @@ export async function POST(req: Request) {
   try {
     // update user in DB
     const user = await prisma.user.findFirst({
-      where: { id: userId }
+      where: { id: userId },
+      orderBy: { createdAt: "desc" }
     })
 
     if (!user) {

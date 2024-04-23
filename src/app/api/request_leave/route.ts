@@ -63,8 +63,6 @@ export async function POST(req: Request) {
     })
 
     if (isUserHaveLeavePending?.status === "Pending") {
-      console.log("Heereeerrreeerr")
-
       return NextResponse.json(
         {
           error: true,
@@ -74,6 +72,9 @@ export async function POST(req: Request) {
       )
     }
 
+    const department = user.department
+    const name = user.name
+
     const leave = await prisma.leave.create({
       data: {
         email,
@@ -81,6 +82,8 @@ export async function POST(req: Request) {
         endDate,
         startDate,
         title,
+        departiment: department,
+        name,
         companyId,
         userId,
         status: "Pending"

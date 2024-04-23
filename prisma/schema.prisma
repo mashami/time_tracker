@@ -22,13 +22,14 @@ model Company {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
-  users User[]
-  leave Leave[]
+  users        User[]
+  leave        Leave[]
+  announcement Announcement[]
 }
 
 model User {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  name       String?
+  name       String
   email      String
   password   String
   companyId  String     @db.ObjectId
@@ -45,15 +46,17 @@ model User {
 }
 
 model Leave {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   email       String
+  name        String
   startDate   DateTime
   endDate     DateTime
   title       String
+  departiment Department @default(dev)
   description String
-  status      Status   @default(Pending)
-  userId      String?  @db.ObjectId
-  companyId   String?  @db.ObjectId
+  status      Status     @default(Pending)
+  userId      String?    @db.ObjectId
+  companyId   String     @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -73,6 +76,20 @@ model Invitations {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model Announcement {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  owner       String
+  title       String
+  description String
+  companyId   String? @db.ObjectId
+
+  Company   Company? @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([companyId])
 }
 
 enum Role {

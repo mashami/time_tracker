@@ -13,14 +13,14 @@ export async function POST(req: Request) {
   }
 
   try {
-    const users = await prisma.user.findMany({
+    const announcement = await prisma.announcement.findMany({
       where: { companyId },
       orderBy: { createdAt: "desc" }
     })
 
-    if (!users) {
+    if (!announcement) {
       return NextResponse.json(
-        { error: true, message: "NO User yet on this company" },
+        { error: true, message: "NO announcement on this company" },
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }
@@ -28,8 +28,8 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         success: true,
-        message: "Users fetched successfully.",
-        data: users
+        message: "announcement fetched successfully.",
+        data: announcement
       },
       { status: HttpStatusCode.OK }
     )

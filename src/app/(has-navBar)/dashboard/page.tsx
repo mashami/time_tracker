@@ -1,14 +1,14 @@
 import {
   getAllInvitedUSers,
   getAllUserAsignCompany,
-  getLeaves,
+  getAnnouncementCompany,
   getLeavesByUser,
   getUser
 } from "@/services/user"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "../api/auth/[...nextauth]/route"
+import { authOptions } from "../../api/auth/[...nextauth]/route"
 import DashboardAdminPageWidget from "./DashboardAdmin_widget"
 import DashboardUserWidgetPage from "./DashboardUserWidget"
 
@@ -26,18 +26,21 @@ const dashboardPage = async () => {
     const user = data?.user as UserWithRelations
 
     const companyId = user.companyId
+    const announcements = await getAnnouncementCompany(companyId)
 
     if (user.role === "Admin") {
-      const leaves = await getLeaves(companyId)
       const allUsers = await getAllUserAsignCompany(companyId)
+      // console.log(allUsers.data)
+
       const invitedUser = await getAllInvitedUSers(companyId)
+
       return (
         <div>
           <DashboardAdminPageWidget
             companyId={companyId}
-            leaves={leaves.data}
             users={allUsers.data}
             invitations={invitedUser.data}
+            announcements={announcements.data}
           />
         </div>
       )
@@ -52,6 +55,8 @@ const dashboardPage = async () => {
             companyId={companyId}
             userId={userId}
             leaves={leaves.data}
+            user={user}
+            announcements={announcements.data}
           />
         </div>
       )

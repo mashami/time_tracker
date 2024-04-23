@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -36,7 +38,6 @@ const signinPage = () => {
 
         return
       }
-      console.log(result)
 
       return router.push("/dashboard")
     } catch (error) {
@@ -48,33 +49,68 @@ const signinPage = () => {
   }
 
   return (
-    <div className="mx-auto w-[260px]">
-      <h1 className="font-bricolage text-[20px] font-bold pb-4">Sigin </h1>
-      <form
-        action=""
-        onSubmit={onSubmitHandler}
-        className="flex flex-col space-y-3 "
-      >
-        <input
-          type="email"
-          placeholder="Type Email ..."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+    <div className="pt-[120px] h-full">
+      <div className="w-[550px] px-[115px] pt-[63px] pb-[40px] mx-auto my-auto bg-white rounded-[16px] space-y-6">
+        <div className="space-y-[90px] text-center">
+          <h1 className="font-bricolage font-bold text-[36px] text-[#006A86]">
+            Time Tracker
+          </h1>
+          <p className="font-medium text-[20px] text-black">
+            Sign In to your account
+          </p>
+        </div>
 
-        <input
-          type="text"
-          placeholder="Type password .."
-          className="border border-[rgb(255,238,238)] p-2 rounded-md"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <form
+          action=""
+          onSubmit={onSubmitHandler}
+          className="flex flex-col space-y-6"
+        >
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Email
+            </label>
+            <Input
+              type="email"
+              className="border border-[#Fee] p-2 rounded-md"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </span>
 
-        <button className="bg-green-500 flex items-center rounded-full h-10 w-fit px-4">
-          Signin
-        </button>
-      </form>
+          <span className="space-y-[6px]">
+            <label
+              htmlFor=""
+              className="text-[14px] leading-5 font-normal text-black"
+            >
+              Password
+            </label>
+            <Input
+              type="text"
+              className="border border-[rgb(255,238,238)] p-2 rounded-md"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </span>
+
+          <Button
+            className="text-white w-full"
+            text="Continue"
+            style={{
+              boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
+            }}
+          />
+        </form>
+
+        <span className="text-[14px] leading-5 font-normal flex items-center space-x-1 justify-center">
+          <p className="text-black">Don’t have an account?</p>
+          <a href="/signup" className="text-[#006A86]">
+            Sign up
+          </a>
+        </span>
+      </div>
     </div>
   )
 }

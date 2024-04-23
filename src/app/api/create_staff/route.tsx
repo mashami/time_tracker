@@ -43,7 +43,7 @@ export async function POST(req: Request) {
           emailContent
         )
         return NextResponse.json(
-          { message: "Resend Invitation" },
+          { message: "Resend Invitation successfully" },
           { status: HttpStatusCode.OK }
         )
       }

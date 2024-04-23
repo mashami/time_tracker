@@ -7,9 +7,9 @@ const Search = () => {
   const [value, setValue] = useState<string>("")
   return (
     <div
-      className="flex items-center justify-between p-2 w-[398px]"
+      className="flex items-center justify-between p-2 w-[356px]"
       style={{
-        borderRadius: "4px",
+        borderRadius: "32px",
         border: "1px solid #E3F0F3",
 
         background: "var(--gray-white, #FFF)"

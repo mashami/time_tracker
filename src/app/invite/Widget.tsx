@@ -1,5 +1,7 @@
 "use client"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { signUp } from "@/services/user"
 import { Invitations } from "@prisma/client"
@@ -74,43 +76,50 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   }
 
   return (
-    <div>
-      <h1>{email} most welcome</h1>
-      <form
-        action=""
-        onSubmit={onSubmitHandler}
-        className="flex flex-col space-y-2 w-[250px] py-12"
-      >
-        <label htmlFor="">Name:</label>
-        <input
-          type="text"
-          placeholder="Type name ..."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <label htmlFor="">password:</label>
-        <input
-          type="text"
-          placeholder="Type password .."
-          className="border border-[rgb(255,238,238)] p-2 rounded-md"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <label htmlFor="">Retype password:</label>
-        <input
-          type="text"
-          placeholder="Type Retype password .."
-          className="border border-[#Fee] p-2 rounded-md"
-          value={retypedPassword}
-          onChange={(e) => setRetypedPassword(e.target.value)}
-        />
-
-        <button className="bg-green-500 flex items-center rounded-full h-10 w-fit px-4">
-          Sign up
-        </button>
-      </form>
+    <div className="w-full">
+      <div className="max-w-[550px] mx-auto pt-[63px] pb-[56px] bg-white px-[110.5px] rounded-[16px]">
+        <h1 className="font-bricolage font-bold text-[36px] pb-[50px] text-[#006A86]">
+          Time Tracker
+        </h1>
+        <div className="p-6 space-y-8">
+          <h1 className="text-[20px] font-medium leading-[30px] text-center">
+            Enter your details to continue in the system.
+          </h1>
+          <form action={""} onSubmit={onSubmitHandler} className="space-y-6">
+            <div>
+              <label className="text-[14px] leading-5">Your name</label>
+              <Input
+                type="text"
+                onChange={(e) => setName(e.target.value)}
+                value={name}
+              />
+            </div>
+            <div>
+              <label className="text-[14px] leading-5">Password</label>
+              <Input
+                type="text"
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
+              />
+            </div>
+            <div>
+              <label className="text-[14px] leading-5">Re-type Password</label>
+              <Input
+                type="text"
+                onChange={(e) => setRetypedPassword(e.target.value)}
+                value={retypedPassword}
+              />
+            </div>
+            <Button
+              className="text-white w-full"
+              text="Continue"
+              style={{
+                boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
+              }}
+            />
+          </form>
+        </div>
+      </div>
     </div>
   )
 }
