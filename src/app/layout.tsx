@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
+import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider"
 import type { Metadata } from "next"
 import { Bricolage_Grotesque, IBM_Plex_Mono, Inter } from "next/font/google"
 import "../styles/globals.scss"
@@ -36,7 +37,10 @@ export default function RootLayout({
           bricolage.variable
         )}
       >
-        <div className="h-full">{children}</div>
+        <div className="h-full">
+          {/* <AppContextProvider>{children}</AppContextProvider> */}
+          <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+        </div>
         <Toaster />
       </body>
     </html>

@@ -22,14 +22,19 @@ export const authOptions: NextAuthOptions = {
 
         const user = data.user as User
 
+        console.log(user.name)
+
         if (!user) {
           console.log("User doesn't found")
 
           throw new Error(data.message)
         }
 
+        console.log(user.name)
+
         return {
-          id: user.id
+          id: user.id,
+          name: user.name
         }
       }
     })
@@ -49,7 +54,8 @@ export const authOptions: NextAuthOptions = {
 
       const mergedUser = {
         ...sessionUser,
-        id: t.id
+        id: t.id,
+        name: t.name
       }
 
       // Return the updated session object
@@ -64,7 +70,8 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         return {
           ...token,
-          id: user.id
+          id: user.id,
+          name: user.name
         }
       }
 

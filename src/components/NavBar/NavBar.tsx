@@ -1,8 +1,9 @@
 "use client"
 import { cn } from "@/lib/utils"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
   BreakSvg,
   CaretDownSvg,
@@ -14,6 +15,14 @@ import {
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [name, setName] = useState<string>("")
+  const { data } = useSession()
+
+  useEffect(() => {
+    if (data?.user?.name) {
+      setName(data.user.name)
+    }
+  }, [data?.user])
 
   const pathName = usePathname()
 
@@ -22,8 +31,9 @@ const NavBar = () => {
       <h1 className="font-bricolage text-[#006A86] font-bold text-[24px]">
         Time Tracker
       </h1>
+
       <ul
-        className="flex  space-x-[16px] h-[32px] "
+        className="flex space-x-4 h-8"
         style={{
           borderBottom: "1px solid var(--Gray-200, #EAECF0)"
         }}
@@ -96,10 +106,10 @@ const NavBar = () => {
               background: "#F9F9FA"
             }}
           >
-            <div className="w-[27px] h-[27px] rounded-full bg-[#006A86] flex items-center justify-center text-white">
-              K
+            <div className="w-[27px] h-[27px] rounded-full bg-[#006A86] flex items-center justify-center text-white uppercase">
+              {name[0]}
             </div>
-            <p className="text-[14px] font-medium leading-[21px]">Karigirwa</p>
+            <p className="text-[14px] font-medium leading-[21px]">{name}</p>
           </div>
           <div
             className={cn(
