@@ -1,8 +1,8 @@
+import { authOptions } from "@/lib/auth"
 import { getLeaves, getLeavesByUser, getUser } from "@/services/user"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
 import LeaveAdminWidget from "./LeaveAdminWidget"
 import LeaveUserWidget from "./LeaveUserWidget"
 

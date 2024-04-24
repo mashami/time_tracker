@@ -1,3 +1,4 @@
+import { authOptions } from "@/lib/auth"
 import {
   getAllInvitedUSers,
   getAllUserAsignCompany,
@@ -8,20 +9,18 @@ import {
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import { authOptions } from "../../api/auth/[...nextauth]/route"
 import DashboardAdminPageWidget from "./DashboardAdmin_widget"
 import DashboardUserWidgetPage from "./DashboardUserWidget"
 
 export type UserWithRelations = Prisma.UserGetPayload<{}>
+
 const dashboardPage = async () => {
   const session = await getServerSession(authOptions)
-
-  console.log(session)
 
   if (!session) {
     return redirect("/signin")
   }
-  const userId = session?.user?.id as string
+  const userId = session?.user.id
 
   try {
     const data = await getUser(userId)
