@@ -30,7 +30,6 @@ export async function POST(req: Request) {
         await prisma.leave.deleteMany({
           where: { companyId: companyID, userId: userId }
         })
-        console.log("Deletion successful")
       } catch (error) {
         console.error("Error deleting records:", error)
       }

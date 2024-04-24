@@ -58,8 +58,6 @@ export const findDaysBetweenDates = (
 const LeaveAdminWidget = ({ user, leaves }: LeaveAdminWidgetProps) => {
   const leavesPending = leaves.filter((leave) => leave.status === "Pending")
 
-  console.log(leavesPending.length)
-
   const formatDate = (date: Date) => {
     if (!(date instanceof Date)) {
       throw new Error("Invalid date. Argument must be of type Date.")

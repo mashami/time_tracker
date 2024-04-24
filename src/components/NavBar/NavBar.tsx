@@ -17,8 +17,6 @@ const NavBar = () => {
 
   const pathName = usePathname()
 
-  console.log(pathName)
-
   return (
     <div className="h-full w-full flex items-center space-x-7 justify-between">
       <h1 className="font-bricolage text-[#006A86] font-bold text-[24px]">

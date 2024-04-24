@@ -60,9 +60,6 @@ export async function POST(req: Request) {
       }
     })
 
-    console.log("userId ===>", userId)
-    console.log("companyId ===>", companyId)
-
     console.log(isUserHaveLeavePending)
 
     if (isUserHaveLeavePending !== null) {

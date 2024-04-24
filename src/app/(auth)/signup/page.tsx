@@ -69,7 +69,7 @@ const signupPage = () => {
     }
   }
   return (
-    <div className="pt-[100px]">
+    <div className="py-[70px] h-screen bg-[#F9F9F9]">
       <div className="w-[550px] px-[115px] pt-[63px] pb-[40px] mx-auto bg-white rounded-[16px] space-y-6">
         <div className="space-y-5 text-center">
           <h1 className="font-bricolage font-bold text-[36px] text-[#006A86]">
