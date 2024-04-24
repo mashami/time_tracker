@@ -38,10 +38,11 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   text?: string
+  svg?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, text, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, text, svg, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
@@ -49,7 +50,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <p className="text-[14px] px-2 font-medium leading-5">{text}</p>
+        <span className={svg ? "flex items-center space-x-px" : ""}>
+          <p
+            className={cn("text-[14px] font-medium leading-5", !svg && "px-2 ")}
+          >
+            {text}
+          </p>
+          {svg && <span>{svg}</span>}
+        </span>
       </Comp>
     )
   }

@@ -27,7 +27,12 @@ const NavBar = () => {
   const pathName = usePathname()
 
   return (
-    <div className="h-full w-full flex items-center space-x-7 justify-between">
+    <nav
+      className="h-[98px] w-full flex items-center space-x-7 justify-between px-[4.125rem] fixed left-0 right-0 bg-background"
+      style={{
+        zIndex: "10000"
+      }}
+    >
       <h1 className="font-bricolage text-[#006A86] font-bold text-[24px]">
         Time Tracker
       </h1>
@@ -126,7 +131,7 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-    </div>
+    </nav>
   )
 }
 
