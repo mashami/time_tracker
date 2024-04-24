@@ -82,8 +82,8 @@ const LeaveRequest = ({
         </p>
       </div>
       <div className="flex space-x-2">
-        <h3 className="text-[14px] font-medium leading-4">Reason</h3>
-        <p className="text-[10px] leading-4 font-normal text-black">
+        <h3 className="text-[14px] font-medium leading-4">Reason:</h3>
+        <p className="text-[12px] leading-4 font-normal text-black">
           {description}
         </p>
       </div>

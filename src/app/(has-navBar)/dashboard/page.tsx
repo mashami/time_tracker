@@ -16,6 +16,8 @@ export type UserWithRelations = Prisma.UserGetPayload<{}>
 const dashboardPage = async () => {
   const session = await getServerSession(authOptions)
 
+  console.log(session)
+
   if (!session) {
     return redirect("/signin")
   }
@@ -64,7 +66,7 @@ const dashboardPage = async () => {
       return redirect("/signin")
     }
   } catch (error) {
-    console.log(error)
+    return redirect("/signin")
   }
 }
 

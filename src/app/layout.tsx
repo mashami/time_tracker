@@ -36,7 +36,7 @@ export default function RootLayout({
           bricolage.variable
         )}
       >
-        <div className="bg-[#F9F9F9] h-screen">{children}</div>
+        <div className="h-full">{children}</div>
         <Toaster />
       </body>
     </html>

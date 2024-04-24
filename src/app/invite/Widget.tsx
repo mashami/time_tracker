@@ -76,9 +76,9 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full py-[70px] h-screen bg-[#F9F9F9]">
       <div className="max-w-[550px] mx-auto pt-[63px] pb-[56px] bg-white px-[110.5px] rounded-[16px]">
-        <h1 className="font-bricolage font-bold text-[36px] pb-[50px] text-[#006A86]">
+        <h1 className="text-center font-bricolage font-bold text-[36px] pb-[50px] text-[#006A86]">
           Time Tracker
         </h1>
         <div className="p-6 space-y-8">

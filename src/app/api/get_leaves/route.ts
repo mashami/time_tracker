@@ -34,7 +34,7 @@ export async function POST(req: Request) {
       { status: HttpStatusCode.OK }
     )
   } catch (error) {
-    console.log()
+    console.log(error)
 
     return NextResponse.json(
       { error: true, message: "An error occured. Please try again." },

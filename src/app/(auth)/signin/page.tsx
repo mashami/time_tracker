@@ -49,7 +49,7 @@ const signinPage = () => {
   }
 
   return (
-    <div className="pt-[120px] h-full">
+    <div className="pt-[120px] h-screen bg-[#F9F9F9]">
       <div className="w-[550px] px-[115px] pt-[63px] pb-[40px] mx-auto my-auto bg-white rounded-[16px] space-y-6">
         <div className="space-y-[90px] text-center">
           <h1 className="font-bricolage font-bold text-[36px] text-[#006A86]">
