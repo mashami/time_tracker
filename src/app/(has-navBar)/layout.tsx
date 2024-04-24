@@ -8,16 +8,13 @@ interface NavbarPagesLayoutProps {
 const NavbarPagesLayout = ({ children }: NavbarPagesLayoutProps) => {
   return (
     <>
-      <div
-        className="h-[98px] px-[4.125rem] fixed left-0 right-0 bg-background"
-        style={{
-          zIndex: "10000"
-        }}
-      >
+      <div>
         <NavBar />
       </div>
 
-      <section className="px-[14.75rem] pt-[8.875rem] -z-0">{children}</section>
+      <section className="max-w-[968px] mx-auto pt-[8.875rem] pb-8 z-0">
+        {children}
+      </section>
     </>
   )
 }

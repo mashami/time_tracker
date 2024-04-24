@@ -2,7 +2,12 @@ import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider"
 import type { Metadata } from "next"
-import { Bricolage_Grotesque, IBM_Plex_Mono, Inter } from "next/font/google"
+import {
+  Bricolage_Grotesque,
+  IBM_Plex_Mono,
+  Inter,
+  Lexend_Deca
+} from "next/font/google"
 import "../styles/globals.scss"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -16,6 +21,11 @@ const ibm_plex_mono = IBM_Plex_Mono({
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-bricolage-grotesque"
+})
+
+const lexend_Deca = Lexend_Deca({
+  subsets: ["latin"],
+  variable: "--font-lexend-Deca"
 })
 
 export const metadata: Metadata = {
@@ -34,7 +44,8 @@ export default function RootLayout({
         className={cn(
           inter.className,
           ibm_plex_mono.variable,
-          bricolage.variable
+          bricolage.variable,
+          lexend_Deca.variable
         )}
       >
         <div className="h-full">
