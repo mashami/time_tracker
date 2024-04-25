@@ -170,35 +170,6 @@ const LeaveUserWidget = ({
                   </TableCell>
                 </TableRow>
               ))}
-
-              {/* <TableRow className="px-5 pt-[10px] pb-[13.17px] flex items-center space-x-4 justify-between">
-              <div
-                className="cursor-pointer py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <ArrowLeftSvg />
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Previous
-                </p>
-              </div>
-              <div
-                className="cursor-pointer py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Next
-                </p>
-                <ArrowRightSvg />
-              </div>
-            </TableRow> */}
             </TableBody>
           </Table>
         ) : (

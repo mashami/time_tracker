@@ -34,6 +34,7 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [description, setDescription] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
@@ -57,6 +58,8 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
       })
     }
 
+    setIsLoading(true)
+
     try {
       const result = await requestLeave({
         userId: user.id,
@@ -72,7 +75,9 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
         setTitle("")
 
         setDescription("")
+
         setIsOpen(false)
+
         return toast({
           variant: "destructive",
           description: result.message
@@ -81,9 +86,11 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
 
       if (result.OK) {
         router.refresh()
-        return toast({
+        toast({
           description: result.message
         })
+        setIsLoading(false)
+        return
       }
       setTitle("")
 
@@ -92,15 +99,18 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
       setIsOpen(false)
 
       router.refresh()
+      setIsLoading(false)
 
       return toast({
         description: result.message
       })
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server error, Please Try again"
       })
+      setIsLoading(false)
+      return
     }
   }
   return (
@@ -163,6 +173,7 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
                     setIsOpen(false), setDescription("")
                     setTitle("")
                   }}
+                  disabled={isLoading}
                 />
                 <Button
                   className="text-white w-full"
@@ -171,6 +182,8 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
                     boxShadow:
                       " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
                   }}
+                  loading={isLoading}
+                  disabled={isLoading}
                   onClick={requestLeaveHandler}
                 />
               </div>

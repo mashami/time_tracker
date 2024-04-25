@@ -12,6 +12,7 @@ import { useState } from "react"
 const signinPage = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { fetchUser } = useAppContext()
 
@@ -25,6 +26,7 @@ const signinPage = () => {
         description: "All fields are required"
       })
     }
+    setIsLoading(true)
 
     try {
       const result = await signIn("credentials", {
@@ -39,6 +41,8 @@ const signinPage = () => {
           description: result.error
         })
 
+        setIsLoading(false)
+
         return
       }
 
@@ -50,6 +54,7 @@ const signinPage = () => {
         variant: "destructive",
         description: "An error occured. Please try again."
       })
+      setIsLoading(false)
     }
   }
 
@@ -106,6 +111,8 @@ const signinPage = () => {
             style={{
               boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
             }}
+            loading={isLoading}
+            disabled={isLoading}
           />
         </form>
 

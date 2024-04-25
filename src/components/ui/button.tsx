@@ -3,6 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Loader } from "../Loader"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-[32px] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -38,26 +39,47 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   text?: string
+  loading?: boolean
   svg?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, text, svg, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      text,
+      svg,
+      loading = false,
+      asChild = false,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button"
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
       >
-        <span className={svg ? "flex items-center space-x-px" : ""}>
-          <p
-            className={cn("text-[14px] font-medium leading-5", !svg && "px-2 ")}
-          >
-            {text}
-          </p>
-          {svg && <span>{svg}</span>}
-        </span>
+        {loading ? (
+          <Loader />
+        ) : (
+          <span className={svg ? "flex items-center space-x-px" : ""}>
+            <p
+              className={cn(
+                "text-[14px] font-medium leading-5",
+                !svg && "px-2 "
+              )}
+            >
+              {text}
+            </p>
+            {svg && <span>{svg}</span>}
+          </span>
+        )}
       </Comp>
     )
   }

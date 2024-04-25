@@ -13,6 +13,7 @@ const signupPage = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [retypedPassword, setRetypedPassword] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
@@ -30,6 +31,9 @@ const signupPage = () => {
         description: "password are not match"
       })
     }
+
+    setIsLoading(true)
+
     try {
       const result = await register({
         email,
@@ -42,6 +46,7 @@ const signupPage = () => {
           variant: "destructive",
           description: result.message
         })
+        setIsLoading(false)
 
         return
       }
@@ -56,16 +61,21 @@ const signupPage = () => {
           variant: "destructive",
           description: resultSign.error
         })
+        setIsLoading(false)
 
         return
       }
 
-      return router.push("/dashboard")
+      router.push("/dashboard")
+      setIsLoading(false)
+      return
     } catch (error) {
       toast({
         variant: "destructive",
         description: "An error occured. Please try again."
       })
+      setIsLoading(false)
+      return
     }
   }
   return (
@@ -151,6 +161,8 @@ const signupPage = () => {
             style={{
               boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
             }}
+            loading={isLoading}
+            disabled={isLoading}
           />
         </form>
 

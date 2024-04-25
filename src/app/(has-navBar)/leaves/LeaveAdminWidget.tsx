@@ -114,12 +114,12 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
               })
             ) : (
               <p className="font-bricolage font-semibold">
-                No Leaves which is in pending mode{" "}
+                No Leaves which is in pending mode
               </p>
             )}
           </div>
         </div>
-        <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
+        <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
           <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
             Current leave application
           </h2>
@@ -146,8 +146,8 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
                       {l.updatedAt ? formatDate(new Date(l.updatedAt)) : ""}
                     </TableCell>
                     <TableCell className="flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-full flex justify-center items-center bg-[#006A86] text-white">
-                        {l.name[0].toUpperCase()}
+                      <span className="w-6 h-6 rounded-full flex justify-center items-center bg-[#006A86] text-white uppercase">
+                        {l.name[0]}
                       </span>
                       <p> {l.name}</p>
                     </TableCell>
@@ -214,35 +214,6 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
                     </TableCell>
                   </TableRow>
                 ))}
-
-                {/* <TableRow className="px-5 pt-[10px] pb-[13.17px] flex items-center space-x-4 justify-between">
-              <div
-                className="cursor-pointer py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <ArrowLeftSvg />
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Previous
-                </p>
-              </div>
-              <div
-                className="cursor-pointer py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Next
-                </p>
-                <ArrowRightSvg />
-              </div>
-            </TableRow> */}
               </TableBody>
             </Table>
           ) : (
