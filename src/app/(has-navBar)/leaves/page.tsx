@@ -29,7 +29,7 @@ const LeavesPage = async () => {
 
       return (
         <div>
-          <LeaveAdminWidget user={user} leaves={leavesAll.data} />
+          <LeaveAdminWidget leaves={leavesAll.data} />
         </div>
       )
     } catch (error) {

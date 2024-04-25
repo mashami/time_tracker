@@ -14,17 +14,17 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { Leave, User } from "@prisma/client"
+import { Leave } from "@prisma/client"
+import { formatDate } from "../dashboard/DashboardAdmin_widget"
 
 interface LeaveAdminWidgetProps {
-  user: User
   leaves: Leave[]
 }
+
 export const findDaysBetweenDates = (
   startDateStr: string,
   endDateStr: string
 ) => {
-  // Parse start and end date strings into Date objects
   const startDate = new Date(startDateStr)
   const endDate = new Date(endDateStr)
 
@@ -35,7 +35,6 @@ export const findDaysBetweenDates = (
     )
   }
 
-  // Convert dates to UTC to ensure consistent calculations
   const startUTC = Date.UTC(
     startDate.getFullYear(),
     startDate.getMonth(),
@@ -47,24 +46,15 @@ export const findDaysBetweenDates = (
     endDate.getDate()
   )
 
-  // Calculate the difference in milliseconds
   const diffMillis = Math.abs(endUTC - startUTC)
 
-  // Convert milliseconds to days
   const days = Math.floor(diffMillis / (1000 * 60 * 60 * 24))
 
   return days + `${days > 1 ? "Days" : "Day"}`
 }
-const LeaveAdminWidget = ({ user, leaves }: LeaveAdminWidgetProps) => {
-  const leavesPending = leaves.filter((leave) => leave.status === "Pending")
 
-  const formatDate = (date: Date) => {
-    if (!(date instanceof Date)) {
-      throw new Error("Invalid date. Argument must be of type Date.")
-    }
-    const formattedDate = date.toISOString().split("T")[0]
-    return formattedDate
-  }
+const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
+  const leavesPending = leaves.filter((leave) => leave.status === "Pending")
 
   return (
     <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
