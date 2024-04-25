@@ -44,6 +44,12 @@ export const formatDate = (date: Date) => {
   return formattedDate
 }
 
+export interface isLoadingType {
+  isLoadingInvite: boolean
+  isLoadingDelete: boolean
+  isLoadingReInvite: boolean
+}
+
 const DashboardAdminPageWidget = ({
   companyId,
 
@@ -53,6 +59,11 @@ const DashboardAdminPageWidget = ({
 }: DashboardAdminPageWidgetProp) => {
   const [email, setEmail] = useState<string>("")
   const [department, setDepartment] = useState<Department>("dev")
+  const [isLoading, setIsLoading] = useState<isLoadingType>({
+    isLoadingInvite: false,
+    isLoadingDelete: false,
+    isLoadingReInvite: false
+  })
 
   const router = useRouter()
 
@@ -72,6 +83,11 @@ const DashboardAdminPageWidget = ({
       })
     }
 
+    setIsLoading({
+      ...isLoading,
+      isLoadingInvite: true
+    })
+
     try {
       const result = await inviteUser({
         companyId,
@@ -80,24 +96,42 @@ const DashboardAdminPageWidget = ({
       })
 
       if (result.error) {
-        return toast({
+        toast({
           variant: "destructive",
           description: result.message
         })
+
+        setIsLoading({
+          ...isLoading,
+          isLoadingInvite: false
+        })
+
+        return
       }
       setEmail("")
+
       setDepartment(Department.dev)
       router.refresh()
+
+      setIsLoading({
+        ...isLoading,
+        isLoadingInvite: false
+      })
 
       return toast({
         variant: "default",
         description: "User invited successfully"
       })
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server error, Please Try again"
       })
+      setIsLoading({
+        ...isLoading,
+        isLoadingInvite: false
+      })
+      return
     }
   }
 
@@ -112,6 +146,12 @@ const DashboardAdminPageWidget = ({
         description: "companyId, department and email as well required"
       })
     }
+
+    setIsLoading({
+      ...isLoading,
+      isLoadingReInvite: true
+    })
+
     try {
       const result = await inviteUser({
         companyId,
@@ -121,22 +161,42 @@ const DashboardAdminPageWidget = ({
       })
 
       if (result.error) {
-        return toast({
+        toast({
           variant: "destructive",
           description: result.error
         })
+        setIsLoading({
+          ...isLoading,
+          isLoadingReInvite: false
+        })
+        return
       }
-      router.refresh()
 
-      return toast({
+      toast({
         variant: "default",
         description: result.message
       })
+
+      router.refresh()
+
+      setIsLoading({
+        ...isLoading,
+        isLoadingReInvite: false
+      })
+
+      return
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server error, Please Try again"
       })
+
+      setIsLoading({
+        ...isLoading,
+        isLoadingReInvite: false
+      })
+
+      return
     }
   }
 
@@ -147,26 +207,47 @@ const DashboardAdminPageWidget = ({
         description: "Ids are required"
       })
     }
+    setIsLoading({
+      ...isLoading,
+      isLoadingDelete: true
+    })
     try {
       const result = await deleteUser({ userId, companyId })
 
       if (result.error) {
-        return toast({
+        toast({
           variant: "destructive",
           description: result.message
         })
+        setIsLoading({
+          ...isLoading,
+          isLoadingDelete: false
+        })
+        return
       }
 
       router.refresh()
+
+      setIsLoading({
+        ...isLoading,
+        isLoadingDelete: false
+      })
 
       return toast({
         description: "Staff has deleted sucessfully"
       })
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server error, Please Try again buddy!"
       })
+
+      setIsLoading({
+        ...isLoading,
+        isLoadingDelete: false
+      })
+
+      return
     }
   }
 
@@ -178,6 +259,7 @@ const DashboardAdminPageWidget = ({
         </h1>
         <Search />
       </div>
+
       <div className="space-y-6">
         <div className="w-full grid grid-cols-2 gap-6">
           <div className="space-y-6 bg-white p-4 rounded-[24px]">
@@ -220,6 +302,8 @@ const DashboardAdminPageWidget = ({
                       " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
                   }}
                   onClick={onSubmitInviteFormHandler}
+                  loading={isLoading.isLoadingInvite}
+                  disabled={isLoading.isLoadingInvite}
                 />
                 <Button
                   variant={"secondary"}
@@ -228,6 +312,7 @@ const DashboardAdminPageWidget = ({
                   onClick={() => {
                     setDepartment(Department.dev), setEmail("")
                   }}
+                  disabled={isLoading.isLoadingInvite}
                 />
               </div>
             </div>
@@ -349,47 +434,19 @@ const DashboardAdminPageWidget = ({
 
                     <TableCell>
                       {i.role === "Staff" ? (
-                        <button
-                          className="text-[#B42318] px-[12px] py-[6px] border border-[#FEF3F2] bg-[#fff] rounded-[7px]"
+                        <Button
+                          className="text-[#B42318] px-[12px] py-[6px] border border-[#FEF3F2]  bg-[#fff] hover:bg-[#fff]/80 rounded-[7px]"
                           onClick={() => deleteUserHandler(i.id)}
-                        >
-                          Delete
-                        </button>
+                          text="Delete"
+                          loading={isLoading.isLoadingDelete}
+                          disabled={isLoading.isLoadingDelete}
+                        />
                       ) : (
                         ""
                       )}
                     </TableCell>
                   </TableRow>
                 ))}
-
-                {/* <TableRow className="px-5 pt-[10px] pb-[13.17px] flex items-center justify-between">
-              <button
-                className="py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <ArrowLeftSvg />
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Previous
-                </p>
-              </button>
-              <button
-                className="py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Next
-                </p>
-                <ArrowRightSvg />
-              </button>
-            </TableRow> */}
               </TableBody>
             </Table>
           ) : (
@@ -442,49 +499,20 @@ const DashboardAdminPageWidget = ({
 
                     <TableCell>
                       {i.isActive ? (
-                        <button
-                          className="text-[#5F6368] px-[12px] py-[6px] border border-[#CDDFE9] bg-[#fff] rounded-[7px]"
+                        <Button
+                          className="text-[#5F6368] px-[12px] py-[6px] border border-[#CDDFE9] hover:bg-white/80 bg-[#fff] rounded-[7px]"
                           onClick={() =>
                             resendInvitation(i.department, i.email, i.id)
                           }
-                        >
-                          Resend
-                        </button>
+                          text="Resend"
+                          loading={isLoading.isLoadingReInvite}
+                        />
                       ) : (
-                        ""
+                        <></>
                       )}
                     </TableCell>
                   </TableRow>
                 ))}
-
-                {/* <TableRow className="px-5 pt-[10px] pb-[13.17px] flex items-center justify-between">
-              <button
-                className="py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <ArrowLeftSvg />
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Previous
-                </p>
-              </button>
-              <button
-                className="py-[6.5px] px-[11.5px] flex items-center space-x-[6.5px] border-[]"
-                style={{
-                  borderRadius: "6.585px",
-                  border: " 0.823px solid #EAECF0",
-                  background: "var(--Base-White, #FFF)"
-                }}
-              >
-                <p className="text-[#344054] text-[11.5px] font-semibold leading-[16px]">
-                  Next
-                </p>
-                <ArrowRightSvg />
-              </button>
-            </TableRow> */}
               </TableBody>
             </Table>
           ) : (

@@ -24,6 +24,7 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
   const [owner, setOwner] = useState<string>("")
   const [title, setTitle] = useState<string>("")
   const [description, setDescription] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
@@ -40,6 +41,9 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
         description: "Company ID is required"
       })
     }
+
+    setIsLoading(true)
+
     try {
       const result = await createAnnouncement({
         companyId,
@@ -49,10 +53,12 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
       })
 
       if (result.error) {
-        return toast({
+        toast({
           variant: "destructive",
           description: result.message
         })
+        setIsLoading(false)
+        return
       }
       setDescription("")
       setOwner("")
@@ -60,15 +66,23 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
       setIsOpen(false)
 
       router.refresh()
+      setIsLoading(false)
 
-      return toast({
+      toast({
         description: result.message
       })
+
+      setIsLoading(false)
+
+      return
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server Error, please try again"
       })
+
+      setIsLoading(false)
+      return
     }
   }
   return (
