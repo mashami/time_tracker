@@ -18,6 +18,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   const [retypedPassword, setRetypedPassword] = useState<string>("")
   const email = invitation.email
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -33,9 +34,11 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
         description: "password are not match"
       })
     }
+    setIsLoading(false)
+
     try {
       const result = await signUp({
-        email: invitation.email,
+        email,
         password,
         name,
         department: invitation.department,
@@ -48,7 +51,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
           variant: "destructive",
           description: result.message
         })
-
+        setIsLoading(false)
         return
       }
       const resultSign = await signIn("credentials", {
@@ -62,7 +65,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
           variant: "destructive",
           description: resultSign.error
         })
-
+        setIsLoading(false)
         return
       }
 
@@ -72,6 +75,8 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
         variant: "destructive",
         description: "An error occured. Please try again."
       })
+      setIsLoading(false)
+      return
     }
   }
 
@@ -116,6 +121,8 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
               style={{
                 boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
               }}
+              loading={isLoading}
+              disabled={isLoading}
             />
           </form>
         </div>

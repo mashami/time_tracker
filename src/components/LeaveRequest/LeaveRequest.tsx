@@ -1,6 +1,7 @@
 import { changeLeave } from "@/services/user"
 import { Department, Status } from "@prisma/client"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
 import { Button } from "../ui/button"
 import { toast } from "../ui/use-toast"
 
@@ -13,6 +14,11 @@ interface LeaveRequestProp {
   departiment: Department
   id: string
 }
+
+interface IsLoadingType {
+  isLoadingIsProv: boolean
+  isLoadingIsRej: boolean
+}
 //
 const LeaveRequest = ({
   name,
@@ -23,6 +29,10 @@ const LeaveRequest = ({
   id
 }: LeaveRequestProp) => {
   const router = useRouter()
+  const [isLoading, setLoading] = useState<IsLoadingType>({
+    isLoadingIsProv: false,
+    isLoadingIsRej: false
+  })
 
   const changeLeaveStatusHandler = async (
     leaveId: string,
@@ -34,6 +44,21 @@ const LeaveRequest = ({
         description: "leave ID is required"
       })
     }
+
+    console.log(statusLL)
+
+    if (statusLL === Status.IsApproved) {
+      setLoading({
+        ...isLoading,
+        isLoadingIsProv: true
+      })
+    } else {
+      setLoading({
+        ...isLoading,
+        isLoadingIsRej: true
+      })
+    }
+
     try {
       const result = await changeLeave({
         leaveId,
@@ -41,20 +66,63 @@ const LeaveRequest = ({
       })
 
       if (result.error) {
-        return toast({
+        toast({
           variant: "destructive",
           description: result.message
         })
+
+        if (statusLL === Status.IsApproved) {
+          setLoading({
+            ...isLoading,
+            isLoadingIsProv: false
+          })
+        } else {
+          setLoading({
+            ...isLoading,
+            isLoadingIsRej: false
+          })
+        }
+
+        return
       }
       router.refresh()
-      return toast({
+
+      toast({
         description: result.message
       })
+
+      if (statusLL === Status.IsApproved) {
+        setLoading({
+          ...isLoading,
+          isLoadingIsProv: false
+        })
+      } else {
+        setLoading({
+          ...isLoading,
+          isLoadingIsRej: false
+        })
+      }
+
+      return
     } catch (error) {
-      return toast({
+      toast({
         variant: "destructive",
         description: "Server Error, please try again"
       })
+
+      if (statusLL === Status.IsApproved) {
+        setLoading({
+          ...isLoading,
+          isLoadingIsProv: false
+        })
+      } else {
+        setLoading({
+          ...isLoading,
+          isLoadingIsRej: false
+        })
+      }
+
+      return
     }
   }
   return (
@@ -96,12 +164,17 @@ const LeaveRequest = ({
               boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
             }}
             onClick={() => changeLeaveStatusHandler(id, "IsApproved")}
+            loading={isLoading.isLoadingIsProv}
+            disabled={isLoading.isLoadingIsProv}
           />
+
           <Button
             variant={"secondary"}
             className="text-black w-full px-7"
             text="Reject"
             onClick={() => changeLeaveStatusHandler(id, "Rejected")}
+            loading={isLoading.isLoadingIsRej}
+            disabled={isLoading.isLoadingIsRej}
           />
         </div>
       </div>

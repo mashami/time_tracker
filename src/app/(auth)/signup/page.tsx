@@ -67,7 +67,6 @@ const signupPage = () => {
       }
 
       router.push("/dashboard")
-      setIsLoading(false)
       return
     } catch (error) {
       toast({
