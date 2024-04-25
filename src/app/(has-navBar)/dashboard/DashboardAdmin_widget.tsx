@@ -171,7 +171,7 @@ const DashboardAdminPageWidget = ({
   }
 
   return (
-    <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <section className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Dashboard
@@ -257,8 +257,8 @@ const DashboardAdminPageWidget = ({
                           : ""}
                       </p>
                     </div>
-                    <div className="flex items-center space-x-[10px] pb-[16px]">
-                      <span className="w-[12px] h-[12px] rounded-full bg-[#0BA42D] flex flex-shrink-0"></span>
+                    <div className="flex items-start space-x-[10px] pb-[16px]">
+                      <span className="w-[12px] h-[12px] rounded-full bg-[#0BA42D] flex flex-shrink-0 mt-1"></span>
                       <p className="text-[14px] leading-[21px] font-normal text-black">
                         {ann.description}
                       </p>
@@ -266,14 +266,14 @@ const DashboardAdminPageWidget = ({
                   </div>
                 ))
               ) : (
-                <p className="font-medium font-bricolage">
+                <p className="font-medium font-bricolage text-center">
                   No Announcements yet
                 </p>
               )}
             </div>
           </div>
         </div>
-        <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
+        <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
           <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
             Activities tracking
           </h2>
@@ -492,7 +492,7 @@ const DashboardAdminPageWidget = ({
           )}
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 

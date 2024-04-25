@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils"
 import { useAppContext } from "@/utils/context/AppContext"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import {
   BreakSvg,
@@ -18,7 +18,7 @@ import { Button } from "../ui/button"
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [name, setName] = useState<string | undefined>("")
-  const router = useRouter()
+
   const { userInfo, resetUser } = useAppContext()
 
   // console.log(userInfo)
@@ -32,18 +32,13 @@ const NavBar = () => {
   const pathName = usePathname()
 
   return (
-    <nav
-      className="h-[98px] w-full flex items-center space-x-7 justify-between px-[4.125rem] fixed left-0 right-0 bg-background"
-      style={{
-        zIndex: "10000"
-      }}
-    >
-      <h1
-        className="font-bricolage text-[#006A86] font-bold text-[24px]"
-        onClick={() => router.push("/")}
+    <nav className="h-[98px] w-full flex items-center space-x-7 justify-between px-[4.125rem] fixed left-0 right-0 bg-background z-30">
+      <Link
+        href={"/"}
+        className="font-bricolage text-[#006A86] font-bold text-[24px] "
       >
         Time Tracker
-      </h1>
+      </Link>
 
       <ul
         className="flex space-x-4 h-8"

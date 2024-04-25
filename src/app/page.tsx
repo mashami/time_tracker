@@ -1,5 +1,5 @@
 "use client"
-import { Description } from "@/components/Description"
+import { HomePageDescription } from "@/components/HomePageDescription"
 import {
   AlarmSvg,
   AlarmUserSvg,
@@ -58,18 +58,18 @@ export default function HomePage() {
           </span>
         </div>
         <div className="grid grid-cols-3 gap-9 relative">
-          <Description
+          <HomePageDescription
             svg={<AlarmSvg />}
             header="Request for leave"
             description="Enter your basic details including name, and position. Choose the type of leave you need – be it annual, sick, or any other category."
           />
 
-          <Description
+          <HomePageDescription
             svg={<ClockUserSvg />}
             header="Track your Shift"
             description="With our convenient shift tracking feature. Input your schedule details, including shift start and end times, as well as any breaks or overtime."
           />
-          <Description
+          <HomePageDescription
             svg={<AlarmUserSvg />}
             header="Check your Break time"
             description="Take control of your break time with our handy break tracking feature. Simply log your break start and end times."

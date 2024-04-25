@@ -51,7 +51,7 @@ const DashboardUserWidgetPage = ({
   }
 
   return (
-    <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <section className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Dashboard
@@ -60,7 +60,7 @@ const DashboardUserWidgetPage = ({
       </div>
       <LeavePercentages />
 
-      <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
+      <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
         <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
           Leave application summary
         </h2>
@@ -75,7 +75,7 @@ const DashboardUserWidgetPage = ({
                 <TableHead>Counts</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="w-full group">
+            <TableBody className="w-full">
               {leaves.map((l) => (
                 <TableRow
                   key={l.id}
@@ -236,7 +236,7 @@ const DashboardUserWidgetPage = ({
                   </div>
                 ))
               ) : (
-                <p className="font-medium font-bricolage">
+                <p className="font-medium font-bricolage text-center">
                   No Announcements yet
                 </p>
               )}
@@ -244,7 +244,7 @@ const DashboardUserWidgetPage = ({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
 
