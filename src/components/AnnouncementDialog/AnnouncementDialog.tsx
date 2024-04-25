@@ -129,6 +129,7 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
                     setOwner("")
                     setTitle("")
                   }}
+                  disabled={isLoading}
                 />
                 <Button
                   className="text-white w-full"
@@ -138,6 +139,8 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
                       " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
                   }}
                   onClick={onClickHandler}
+                  loading={isLoading}
+                  disabled={isLoading}
                 />
               </div>
             </DialogDescription>
