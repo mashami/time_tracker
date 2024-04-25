@@ -1,8 +1,9 @@
 "use client"
 import { cn } from "@/lib/utils"
-import { useSession } from "next-auth/react"
+import { useAppContext } from "@/utils/context/AppContext"
+import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import {
   BreakSvg,
@@ -12,17 +13,21 @@ import {
   NotificationSvg,
   ShiftsSvg
 } from "../Svg"
+import { Button } from "../ui/button"
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [name, setName] = useState<string>("")
-  const { data } = useSession()
+  const [name, setName] = useState<string | undefined>("")
+  const router = useRouter()
+  const { userInfo, resetUser } = useAppContext()
+
+  // console.log(userInfo)
 
   useEffect(() => {
-    if (data?.user?.name) {
-      setName(data.user.name)
+    if (userInfo) {
+      setName(userInfo?.name)
     }
-  }, [data?.user])
+  }, [userInfo])
 
   const pathName = usePathname()
 
@@ -33,7 +38,10 @@ const NavBar = () => {
         zIndex: "10000"
       }}
     >
-      <h1 className="font-bricolage text-[#006A86] font-bold text-[24px]">
+      <h1
+        className="font-bricolage text-[#006A86] font-bold text-[24px]"
+        onClick={() => router.push("/")}
+      >
         Time Tracker
       </h1>
 
@@ -112,7 +120,7 @@ const NavBar = () => {
             }}
           >
             <div className="w-[27px] h-[27px] rounded-full bg-[#006A86] flex items-center justify-center text-white uppercase">
-              {name[0]}
+              {name ? name[0] : ""}
             </div>
             <p className="text-[14px] font-medium leading-[21px]">{name}</p>
           </div>
@@ -130,6 +138,14 @@ const NavBar = () => {
             />
           </div>
         </div>
+        <Button
+          text="Sign out"
+          className="text-white"
+          onClick={() => {
+            signOut({ callbackUrl: "/signin" })
+            resetUser()
+          }}
+        />
       </div>
     </nav>
   )
