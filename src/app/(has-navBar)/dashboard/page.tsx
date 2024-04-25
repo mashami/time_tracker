@@ -15,8 +15,9 @@ import DashboardUserWidgetPage from "./DashboardUserWidget"
 export type UserWithRelations = Prisma.UserGetPayload<{}>
 
 const dashboardPage = async () => {
-  const session = await getServerSession(authOptions)
+  //Instead of using session again while I have context holds a user who is sign in  I will be using a context API later
 
+  const session = await getServerSession(authOptions)
   if (!session) {
     return redirect("/signin")
   }

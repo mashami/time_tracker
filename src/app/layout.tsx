@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
-import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider"
+import { AppContextProvider } from "@/utils/context/AppContext"
 import type { Metadata } from "next"
 import {
   Bricolage_Grotesque,
@@ -49,8 +49,8 @@ export default function RootLayout({
         )}
       >
         <div className="h-full">
-          {/* <AppContextProvider>{children}</AppContextProvider> */}
-          <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
+          <AppContextProvider>{children}</AppContextProvider>
+          {/* <NextAuthSessionProvider>{children}</NextAuthSessionProvider> */}
         </div>
         <Toaster />
       </body>

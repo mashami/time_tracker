@@ -82,6 +82,19 @@ export const getUser = async (userId: string) => {
   return result
 }
 
+export const getUserInfo = async () => {
+  const response = await fetch(`/api/getuserInfo`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    // body: JSON.stringify({}),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
 //create_staff
 
 export const inviteUser = async ({

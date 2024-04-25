@@ -1,13 +1,13 @@
 "use client"
-import { authOptions } from "@/lib/auth"
-import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider"
-import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
-import { createContext, useContext, useState } from "react"
+
+import { getUserInfo } from "@/services/user"
+import { User } from "@prisma/client"
+import { createContext, useContext, useEffect, useState } from "react"
 
 interface AppContextData {
-  name: string
-  id: string
+  userInfo: User | null
+  fetchUser: () => void
+  resetUser: () => void
 }
 
 const AppContext = createContext<AppContextData | null>(null)
@@ -16,7 +16,7 @@ export const useAppContext = (): AppContextData => {
   const context = useContext(AppContext)
 
   if (!context) {
-    throw new Error("useMyContext must be used within a MyContextProvider")
+    throw new Error("useAppContext must be used within an AppContextProvider")
   }
 
   return context
@@ -26,31 +26,35 @@ interface AppContextProviderProps {
   children: React.ReactNode
 }
 
-export const AppContextProvider = async ({
-  children
-}: AppContextProviderProps) => {
-  const [name, setName] = useState<string>("")
-  const [id, setId] = useState<string>("")
+export const AppContextProvider = ({ children }: AppContextProviderProps) => {
+  const [userInfo, setUserInfo] = useState<User | null>(null)
 
-  const session = await getServerSession(authOptions)
+  useEffect(() => {
+    fetchUser()
+  }, [])
 
-  if (!session) {
-    return redirect("/signin")
+  const fetchUser = async () => {
+    try {
+      const result = await getUserInfo()
+      const user = result.user
+
+      console.log({ user })
+
+      setUserInfo(user)
+    } catch (error) {
+      console.error("Error fetching user info:", error)
+    }
   }
 
-  setId(session.user.id)
-  setName(session.user.name)
+  // console.log(userInfo)
 
-  console.log(id)
-  console.log(name)
+  console.log("User  ===>", userInfo)
 
   const value: AppContextData = {
-    id,
-    name
+    userInfo,
+    fetchUser,
+    resetUser: () => setUserInfo(null)
   }
-  return (
-    <AppContext.Provider value={value}>
-      <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
-    </AppContext.Provider>
-  )
+
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }

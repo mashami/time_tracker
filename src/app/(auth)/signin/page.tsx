@@ -4,6 +4,7 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
+import { useAppContext } from "@/utils/context/AppContext"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -11,6 +12,8 @@ import { useState } from "react"
 const signinPage = () => {
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
+
+  const { fetchUser } = useAppContext()
 
   const router = useRouter()
 
@@ -38,6 +41,8 @@ const signinPage = () => {
 
         return
       }
+
+      fetchUser()
 
       return router.push("/dashboard")
     } catch (error) {
