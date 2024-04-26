@@ -1,15 +1,10 @@
+import { Loader } from "@/components/Loader"
 import { authOptions } from "@/lib/auth"
-import {
-  getAllInvitedUSers,
-  getAllUserAsignCompany,
-  getAnnouncementCompany,
-  getLeavesByUser,
-  getUser
-} from "@/services/user"
+import { getAnnouncementCompany, getLeavesByUser } from "@/services/user"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
-import DashboardAdminPageWidget from "./DashboardAdmin_widget"
+import { Suspense } from "react"
 import DashboardUserWidgetPage from "./DashboardUserWidget"
 
 export type UserWithRelations = Prisma.UserGetPayload<{}>
@@ -23,46 +18,53 @@ const DashboardPage = async () => {
     return redirect("/signin")
   }
 
+  const companyId = session?.user.companyId
+  const role = session?.user.role
   const userId = session?.user.id
-
-  const data = await getUser(userId)
-  const user = data?.user as UserWithRelations
-
-  const companyId = user.companyId
 
   const announcements = await getAnnouncementCompany(companyId)
 
-  if (user.role === "Admin") {
-    const allUsers = await getAllUserAsignCompany(companyId)
-    // console.log(allUsers.data)
+  if (role === "Admin") {
+    return redirect("/members")
+    // const allUsers = await getAllUserAsignCompany(companyId)
+    // // console.log(allUsers.data)
 
-    const invitedUser = await getAllInvitedUSers(companyId)
+    // const invitedUser = await getAllInvitedUSers(companyId)
 
-    return (
-      <>
-        <DashboardAdminPageWidget
-          companyId={companyId}
-          users={allUsers.data}
-          invitations={invitedUser.data}
-          announcements={announcements.data}
-        />
-      </>
-    )
-  } else if (user.role === "Staff") {
+    // return (
+    //   <Suspense
+    //     fallback={
+    //       <div className="w-full h-full grid place-items-center">
+    //         <Loader />
+    //       </div>
+    //     }
+    //   >
+    //     <DashboardAdminPageWidget
+    //       companyId={companyId}
+    //       users={allUsers.data}
+    //       invitations={invitedUser.data}
+    //       announcements={announcements.data}
+    //     />
+    //   </Suspense>
+    // )
+  } else if (role === "Staff") {
     const leaves = await getLeavesByUser({
-      userId: user.id,
-      companyId: user.companyId
+      userId: userId,
+      companyId: companyId
     })
     return (
-      <>
+      <Suspense
+        fallback={
+          <div className="w-full h-full grid place-items-center">
+            <Loader />
+          </div>
+        }
+      >
         <DashboardUserWidgetPage
-          companyId={companyId}
-          userId={userId}
           leaves={leaves.data}
-          user={user}
           announcements={announcements.data}
         />
-      </>
+      </Suspense>
     )
   } else {
     return redirect("/signin")

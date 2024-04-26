@@ -25,23 +25,15 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
+import { formatDate } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface DashboardAdminPageWidgetProp {
   companyId: string
-
   users: User[]
   invitations: Invitations[]
   announcements: Announcement[]
-}
-
-export const formatDate = (date: Date) => {
-  if (!(date instanceof Date)) {
-    throw new Error("Invalid date. Argument must be of type Date.")
-  }
-  const formattedDate = date.toISOString().split("T")[0]
-  return formattedDate
 }
 
 export interface isLoadingType {
@@ -66,9 +58,6 @@ const DashboardAdminPageWidget = ({
   })
 
   const router = useRouter()
-
-  // console.log("invitation ===>", invitations)
-  // console.log("users ===>", users)
 
   const isEmailValid = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

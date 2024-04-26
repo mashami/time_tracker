@@ -1,11 +1,6 @@
 "use client"
-import {
-  LeaveIn,
-  LeavePending,
-  LeavePercentages
-} from "@/components/LeaveRequest"
+import { LeaveIn, LeavePending } from "@/components/LeaveRequest"
 import { RequestLeaveDialog } from "@/components/RequestLeaveDialog"
-import { Search } from "@/components/Search"
 import {
   Table,
   TableBody,
@@ -15,7 +10,8 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { Leave, User } from "@prisma/client"
-import { formatDate } from "../dashboard/DashboardAdmin_widget"
+
+import { formatDate } from "@/utils/helpers"
 import { findDaysBetweenDates } from "./LeaveAdminWidget"
 
 interface LeaveUserWidgetProps {
@@ -38,17 +34,12 @@ const LeaveUserWidget = ({
       l.status === "IsApproved" && formatDate(new Date(l.endDate)) > currentDate
   )
 
-  // const firstDate = new Date("2024-01-07")
-  // const secondDate = new Date("2023-11-09")
-  // console.log(firstDate > secondDate)
-
   return (
     <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
-          Dashboard {user.name}
+          Leave
         </h1>
-        <Search />
       </div>
       <div className="w-full grid grid-cols-2 gap-6">
         <div className="p-4 bg-white rounded-[24px] space-y-4">
@@ -80,7 +71,7 @@ const LeaveUserWidget = ({
           )}
         </div>
       </div>
-      <LeavePercentages />
+      {/* <LeavePercentages /> */}
 
       <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
         <div className="flex items-center justify-between">

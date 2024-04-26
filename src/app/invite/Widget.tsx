@@ -19,6 +19,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   const email = invitation.email
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  // const { resetUser } = useAppContext()
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -34,7 +35,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
         description: "password are not match"
       })
     }
-    setIsLoading(false)
+    setIsLoading(true)
 
     try {
       const result = await signUp({
@@ -69,6 +70,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
         return
       }
 
+      // resetUser()
       return router.push("/dashboard")
     } catch (error) {
       toast({

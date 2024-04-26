@@ -128,7 +128,7 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
         <DialogContent>
           <DialogHeader className="space-y-[18.8px]">
             <DialogTitle className="text-black font-medium leading-6 text-[16px]">
-              Enter new announcement
+              Request for leave
             </DialogTitle>
             <DialogDescription className="border-[#CDDFE9] border-[0.5px] rounded-[18.8px] p-[18.2px] space-y-[18.2px]">
               <Select onValueChange={(value: string) => setTitle(value)}>

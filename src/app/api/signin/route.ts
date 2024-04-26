@@ -36,8 +36,6 @@ export async function POST(req: Request) {
 
     const { password: _, ...restUser } = user
 
-    console.log(user)
-
     return NextResponse.json(
       { success: true, message: "User loggedin successfully.", user: restUser },
       { status: HttpStatusCode.OK }
