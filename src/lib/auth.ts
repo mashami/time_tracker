@@ -22,7 +22,7 @@ export const authOptions: NextAuthOptions = {
 
         const user = data.user as User
 
-        console.log(user.name)
+        // console.log("user logged in===>", { user })
 
         if (!user) {
           console.log("User doesn't found")
@@ -30,11 +30,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error(data.message)
         }
 
-        console.log(user.name)
-
         return {
           id: user.id,
-          name: user.name
+          name: user.name,
+          companyId: user.companyId,
+          role: user.role
         }
       }
     })
@@ -55,10 +55,12 @@ export const authOptions: NextAuthOptions = {
       const mergedUser = {
         ...sessionUser,
         id: t.id,
-        name: t.name
+        name: t.name,
+        companyId: t.companyId,
+        role: t.role
       }
 
-      // Return the updated session object
+      // console.log({ mergedUser })
 
       return {
         ...rest,
@@ -71,7 +73,9 @@ export const authOptions: NextAuthOptions = {
         return {
           ...token,
           id: user.id,
-          name: user.name
+          name: user.name,
+          companyId: user.companyId,
+          role: user.role
         }
       }
 

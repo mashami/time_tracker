@@ -38,8 +38,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
       const result = await getUserInfo()
       const user = result.user
 
-      console.log({ user })
-
       setUserInfo(user)
     } catch (error) {
       console.error("Error fetching user info:", error)
@@ -47,8 +45,6 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   }
 
   // console.log(userInfo)
-
-  console.log("User  ===>", userInfo)
 
   const value: AppContextData = {
     userInfo,

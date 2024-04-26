@@ -4,8 +4,6 @@ import { Holiday } from "@/components/Holiday"
 
 import { LeaveRequest } from "@/components/LeaveRequest"
 
-import { Search } from "@/components/Search"
-
 import {
   Table,
   TableBody,
@@ -14,8 +12,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
+import { formatDate } from "@/utils/helpers"
 import { Leave } from "@prisma/client"
-import { formatDate } from "../dashboard/DashboardAdmin_widget"
 
 interface LeaveAdminWidgetProps {
   leaves: Leave[]
@@ -58,11 +56,10 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
 
   return (
     <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center ">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
-          Dashboard
+          Leave
         </h1>
-        <Search />
       </div>
       <div className="space-y-6">
         <div className="w-full grid grid-cols-2 gap-6">
@@ -126,14 +123,29 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
           {leaves.length > 0 ? (
             <Table className="w-full">
               <TableHeader className="w-full">
-                <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
-                  <TableHead>Date</TableHead>
-                  <TableHead className=""> User</TableHead>
-                  <TableHead>Leave type</TableHead>
-                  <TableHead>Form Date</TableHead>
-                  <TableHead>To Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Counts</TableHead>
+                <TableRow className="text-[#475467] text-[14px] leading-5">
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    Date
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    {" "}
+                    User
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    Leave type
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    Form Date
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    To Date
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    Status
+                  </TableHead>
+                  <TableHead className="text-[#475467] text-[14px] leading-5">
+                    Counts
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="w-full group">
@@ -220,7 +232,7 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
             <p>No Leave yet</p>
           )}
         </div>
-        <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
+        {/* <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
           <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
             Percentage leaves in year
           </h2>
@@ -248,7 +260,7 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
               <h1 className="text-[24px] font-medium text-black">32%</h1>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )

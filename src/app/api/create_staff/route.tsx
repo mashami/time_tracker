@@ -54,7 +54,7 @@ export async function POST(req: Request) {
     })
     if (!companyExit) {
       return NextResponse.json(
-        { error: true, message: "Company doesn't exit" },
+        { error: true, message: "Company Id doesn't exit" },
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }

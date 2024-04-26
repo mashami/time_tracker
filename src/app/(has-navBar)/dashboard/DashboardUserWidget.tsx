@@ -1,8 +1,7 @@
 "use client"
 
+import { AnnouncementCop } from "@/components/Announcement"
 import { Holiday } from "@/components/Holiday"
-import { LeavePercentages } from "@/components/LeaveRequest"
-import { Search } from "@/components/Search"
 import {
   Table,
   TableBody,
@@ -11,20 +10,18 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { Announcement, Leave, User } from "@prisma/client"
+import { formatDate } from "@/utils/helpers"
+import { Announcement, Leave } from "@prisma/client"
 import { findDaysBetweenDates } from "../leaves/LeaveAdminWidget"
-import { formatDate } from "./DashboardAdmin_widget"
+
 interface DashboardUserWidgetPageProps {
-  userId: string
-  companyId: string
   leaves: Leave[]
-  user: User
+
   announcements: Announcement[]
 }
 
 const DashboardUserWidgetPage = ({
   leaves,
-
   announcements
 }: DashboardUserWidgetPageProps) => {
   const newAnnLength = () => {
@@ -47,9 +44,7 @@ const DashboardUserWidgetPage = ({
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Dashboard
         </h1>
-        <Search />
       </div>
-      <LeavePercentages />
 
       <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
         <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
@@ -148,7 +143,7 @@ const DashboardUserWidgetPage = ({
               Upcomming Holidays
             </h2>
             <div
-              className="p-4 max-h-[426px] overflow-scroll"
+              className="p-4 max-h-[320px] overflow-scroll"
               style={{
                 borderRadius: "16px",
                 border: "0.5px solid #CDDFE9"
@@ -172,30 +167,17 @@ const DashboardUserWidgetPage = ({
                 {`(${newAnnLength().toString()} new)`}
               </p>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 max-h-[320px] overflow-scroll">
               {announcements.length - 1 > 0 ? (
                 announcements.map((ann) => (
-                  <div
+                  <AnnouncementCop
                     key={ann.id}
-                    className="space-y-[10px] px-[10px] pt-[6px] border border-[#CDDFE9] rounded-[10px]"
-                  >
-                    <div className="flex items-center justify-between pb-[4px]">
-                      <p className="text-black font-bold text-[14px]">
-                        {ann.owner}
-                      </p>
-                      <p className="text-[#475467] text-[14px] font-medium leading-4">
-                        {ann.updatedAt
-                          ? formatDate(new Date(ann.updatedAt))
-                          : ""}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-[10px] pb-[16px]">
-                      <span className="w-[12px] h-[12px] rounded-full bg-[#0BA42D] flex flex-shrink-0"></span>
-                      <p className="text-[14px] leading-[21px] font-normal text-black">
-                        {ann.description}
-                      </p>
-                    </div>
-                  </div>
+                    date={ann.updatedAt}
+                    description={ann.description}
+                    id={ann.id}
+                    owner={ann.owner}
+                    role={"Staff"}
+                  />
                 ))
               ) : (
                 <p className="font-medium font-bricolage text-center">

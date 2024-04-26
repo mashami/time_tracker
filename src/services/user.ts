@@ -284,3 +284,16 @@ export const getAnnouncementCompany = async (companyId: string) => {
 
   return result
 }
+
+export const deleteAnnouncement = async (announcementId: string) => {
+  const response = await fetch(`/api/delete_announcement`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ announcementId }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}

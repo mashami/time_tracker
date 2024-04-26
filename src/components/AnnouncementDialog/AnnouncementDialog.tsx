@@ -9,7 +9,6 @@ import {
 import { createAnnouncement } from "@/services/user"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { CaretRightSvg } from "../Svg"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
@@ -41,7 +40,6 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
         description: "Company ID is required"
       })
     }
-
     setIsLoading(true)
 
     try {
@@ -87,15 +85,11 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
   }
   return (
     <>
-      <div
-        className="flex items-center space-x-[10px] cursor-pointer"
+      <Button
+        text="Add new"
+        className="bg-black hover:bg-black/80 text-white"
         onClick={() => setIsOpen(true)}
-      >
-        <p className="text-[#006A86] text-[16px] font-medium leading-6">
-          Add new
-        </p>
-        <CaretRightSvg />
-      </div>
+      />
       <Dialog onOpenChange={setIsOpen} open={isOpen}>
         <DialogContent>
           <DialogHeader className="space-y-[18.8px]">
@@ -104,7 +98,7 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
             </DialogTitle>
             <DialogDescription className="border-[#CDDFE9] border-[0.5px] rounded-[18.8px] p-[18.2px] space-y-[18.2px]">
               <Input
-                placeholder="Name of who's announcement"
+                placeholder="Announcer"
                 onChange={(e) => setOwner(e.target.value)}
                 value={owner}
               />
@@ -133,7 +127,7 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
                 />
                 <Button
                   className="text-white w-full"
-                  text="Add Anouncement"
+                  text="Publish"
                   style={{
                     boxShadow:
                       " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"

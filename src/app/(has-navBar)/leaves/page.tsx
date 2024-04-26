@@ -1,8 +1,10 @@
+import { Loader } from "@/components/Loader"
 import { authOptions } from "@/lib/auth"
 import { getLeaves, getLeavesByUser, getUser } from "@/services/user"
 import { Prisma } from "@prisma/client"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 import LeaveAdminWidget from "./LeaveAdminWidget"
 import LeaveUserWidget from "./LeaveUserWidget"
 
@@ -38,14 +40,20 @@ const LeavesPage = async () => {
   }
   const leaves = await getLeavesByUser({ userId: user.id, companyId })
   return (
-    <div>
+    <Suspense
+      fallback={
+        <div className="w-full h-full grid place-items-center">
+          <Loader />
+        </div>
+      }
+    >
       <LeaveUserWidget
         user={user}
         leaves={leaves.data}
         companyId={companyId}
         leavesAll={leavesAll.data}
       />
-    </div>
+    </Suspense>
   )
 }
 
