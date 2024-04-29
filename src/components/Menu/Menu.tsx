@@ -5,13 +5,15 @@ import { useAppContext } from "@/utils/context/AppContext"
 import { Role } from "@prisma/client"
 import { signOut } from "next-auth/react"
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { InviteDialog } from "../InviteDialog"
+import { Loader } from "../Loader"
 import {
   AnnouncementSvg,
   ArrowRighSvg,
   BreaksSvg,
+  DashboardSvg,
   LeaveSvg,
   LogOutSvg,
   MemberSvg
@@ -24,9 +26,7 @@ const Menu = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const path = usePathname()
-
   const { userInfo, resetUser } = useAppContext()
-  const router = useRouter()
 
   // console.log(userInfo)
 
@@ -52,58 +52,62 @@ const Menu = () => {
           </div>
           <div className="px-[17px] space-y-4">
             {role === "Admin" ? (
-              <div
+              <Link
+                href={"/members"}
                 className={cn(
                   path === "/members" && "bg-[#F9F9F9]",
                   "p-[10px] flex items-center space-x-[10px] hover:bg-[#F9F9F9] cursor-pointer rounded-md"
                 )}
-                onClick={() => router.push("/members")}
+                // onClick={() => router.push("/members")}
               >
                 <MemberSvg />
                 <p className="text-[#667085] text-[14px] font-semibold leading-5 cursor-pointer">
                   Members
                 </p>
-              </div>
+              </Link>
             ) : (
-              <div
+              <Link
+                href={"/dashboard"}
                 className={cn(
                   path === "/dashboard" && "bg-[#F9F9F9]",
                   "p-[10px] flex items-center space-x-[10px] hover:bg-[#F9F9F9] cursor-pointer rounded-md"
                 )}
-                onClick={() => router.push("/dashboard")}
+                // onClick={() => router.push("/dashboard")}
               >
-                <MemberSvg />
+                <DashboardSvg />
                 <p className="text-[#667085] text-[14px] font-semibold leading-5 cursor-pointer">
                   Dashaboard
                 </p>
-              </div>
+              </Link>
             )}
 
-            <div
+            <Link
+              href={"/announcements"}
               className={cn(
                 path === "/announcements" && "bg-[#F9F9F9]",
                 "p-[10px] flex items-center space-x-[10px] hover:bg-[#F9F9F9] cursor-pointer rounded-md"
               )}
-              onClick={() => router.push("/announcements")}
+              // onClick={() => router.push("/announcements")}
             >
               <AnnouncementSvg />
               <p className="text-[#667085] text-[14px] font-semibold leading-5 cursor-pointer">
                 Announcement
               </p>
-            </div>
+            </Link>
 
-            <div
+            <Link
+              href={"/leaves"}
               className={cn(
                 path === "/leaves" && "bg-[#F9F9F9]",
                 "p-[10px] flex items-center space-x-[10px] hover:bg-[#F9F9F9] cursor-pointer rounded-md"
               )}
-              onClick={() => router.push("/leaves")}
+              // onClick={() => router.push("/leaves")}
             >
               <LeaveSvg />
               <p className="text-[#667085] text-[14px] font-semibold leading-5 cursor-pointer rounded-md">
                 Leave
               </p>
-            </div>
+            </Link>
 
             <div className="p-[10px] flex items-center justify-between rounded-md ">
               <div className="flex items-center space-x-[10px]">
@@ -132,8 +136,11 @@ const Menu = () => {
               </div>
             </div>
             {role === "Admin" && (
-              <div className="pt-[79px]" onClick={() => setIsOpen(true)}>
-                <div className="p-[10px] flex items-center  space-x-[10px] bg-[#F9F9F9] cursor-pointer rounded-md">
+              <div className="pt-[79px]">
+                <div
+                  className="p-[10px] flex items-center  space-x-[10px] bg-[#F9F9F9] cursor-pointer rounded-md"
+                  onClick={() => setIsOpen(true)}
+                >
                   <p className="text-black text-[14px] font-medium leading-5 cursor-pointer rounded-md">
                     Invite Staff
                   </p>
@@ -147,9 +154,11 @@ const Menu = () => {
           <div className="flex items-center space-x-[7px] px-[17px]">
             <div className=" flex flex-1 items-center space-x-[9px] pr-[13.3px] pl-[6.6px] py-[6.6px] h-full bg-[#F9F9FA] select-none rounded-[16px]">
               <div className="w-[27px] h-[27px] rounded-full bg-[#006A86] flex items-center justify-center text-white uppercase">
-                {name ? name[0] : ""}
+                {name ? name[0] : <Loader />}
               </div>
-              <p className="text-[14px] font-medium leading-[21px]">{name}</p>
+              <p className="text-[14px] font-medium leading-[21px]">
+                {name ? name : <Loader />}
+              </p>
             </div>
             <div
               className="w-[40px] h-[40px] cursor-pointer rounded-full bg-[#F9F9FA] hover:bg-[#F9F9FA]/60 flex items-center justify-center text-white uppercase"
