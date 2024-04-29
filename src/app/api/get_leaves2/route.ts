@@ -3,7 +3,7 @@ import { HttpStatusCode } from "@/utils/enums"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { companyId } = await req.json()
+  const { companyId, page } = await req.json()
 
   const pageSize = 2
 
@@ -13,16 +13,19 @@ export async function POST(req: Request) {
       { status: HttpStatusCode.BAD_REQUEST }
     )
   }
+  // console.log(page)
 
   try {
     const totalCount = await prisma.leave.count({ where: { companyId } })
     const totalPages = Math.ceil(totalCount / pageSize)
 
-    console.log(" totalPages  ==>", totalPages)
+    // console.log("totalCount ===>", totalCount)
+
+    // console.log("totalPages ===>", totalPages)
 
     const leaves = await prisma.leave.findMany({
-      // skip: (page - 1) * pageSize,
-      take: totalPages,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       where: { companyId },
       orderBy: { createdAt: "desc" }
     })
@@ -38,7 +41,13 @@ export async function POST(req: Request) {
       {
         success: true,
         message: "Leaves fetched successfully.",
-        data: leaves
+        data: leaves,
+        pagination: {
+          page,
+          pageSize,
+          totalCount,
+          totalPages
+        }
       },
       { status: HttpStatusCode.OK }
     )

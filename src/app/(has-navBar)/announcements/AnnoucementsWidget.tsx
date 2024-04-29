@@ -30,7 +30,7 @@ const AnnouncementsWidget = ({
           All {announcementLength}
         </h2>
         <div className="space-y-6">
-          {announcements.length - 1 > 0 ? (
+          {announcements.length > 0 ? (
             announcements.map((ann) => (
               <AnnouncementCop
                 key={ann.id}

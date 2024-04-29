@@ -169,6 +169,21 @@ export const getLeaves = async (companyId: string) => {
   return result
 }
 
+export const getLeaves2 = async (companyId: string, nextPage: number) => {
+  const response = await fetch(`/api/get_leaves2`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ companyId, page: nextPage }),
+    cache: "no-store"
+  })
+
+  console.log(nextPage)
+
+  const result = await response.json()
+
+  return result
+}
+
 export const getLeavesByUser = async ({
   userId,
   companyId

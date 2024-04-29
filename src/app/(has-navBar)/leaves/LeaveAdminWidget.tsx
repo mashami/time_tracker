@@ -12,47 +12,74 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { formatDate } from "@/utils/helpers"
+import { getLeaves2 } from "@/services/user"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Leave } from "@prisma/client"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 interface LeaveAdminWidgetProps {
   leaves: Leave[]
+  companyId: string
 }
 
-export const findDaysBetweenDates = (
-  startDateStr: string,
-  endDateStr: string
-) => {
-  const startDate = new Date(startDateStr)
-  const endDate = new Date(endDateStr)
+const LeaveAdminWidget = ({
+  leaves: initialLeaves,
+  companyId
+}: LeaveAdminWidgetProps) => {
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [leaves, setLeaves] = useState<Leave[]>(initialLeaves)
+  const [leaveLength, setLeaveLength] = useState<number>(0)
+  const [totalLeaves, setTotalLeaves] = useState<number>(0)
 
-  // Check if the parsed dates are valid
-  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-    throw new Error(
-      "Invalid date format. Please provide dates in the format 'YYYY-MM-DD'."
-    )
+  const leavesPending = initialLeaves.filter(
+    (leave) => leave.status === "Pending"
+  )
+  const router = useRouter()
+
+  const fetchLeaves = async (page: number) => {
+    try {
+      const response = await getLeaves2(companyId, page)
+      const { data, pagination } = response
+
+      console.log(page)
+
+      console.log(pagination)
+      setTotalLeaves(pagination.totalCount)
+
+      setLeaves(data)
+
+      console.log(data.length)
+
+      setLeaveLength((prevLength) => prevLength + data.length)
+
+      setCurrentPage(page)
+    } catch (error) {
+      console.error("Error fetching leaves:", error)
+    }
   }
 
-  const startUTC = Date.UTC(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  )
-  const endUTC = Date.UTC(
-    endDate.getFullYear(),
-    endDate.getMonth(),
-    endDate.getDate()
-  )
+  useEffect(() => {
+    fetchLeaves(currentPage)
+  }, [])
 
-  const diffMillis = Math.abs(endUTC - startUTC)
+  // console.log("leaveLength ===>", leaveLength)
+  // console.log("totalLeaves ===>", totalLeaves)
 
-  const days = Math.floor(diffMillis / (1000 * 60 * 60 * 24))
+  const nextHandle = async () => {
+    // if (leaveLength == totalLeaves) {
+    //   return
+    // }
+    const nextPage = currentPage + 1
+    fetchLeaves(nextPage)
+    router.refresh()
+  }
 
-  return days + `${days > 1 ? "Days" : "Day"}`
-}
-
-const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
-  const leavesPending = leaves.filter((leave) => leave.status === "Pending")
+  const previousHandle = async () => {
+    const previousPage = currentPage - 1
+    fetchLeaves(previousPage)
+    router.refresh()
+  }
 
   return (
     <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
@@ -67,17 +94,19 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
               Upcomming Holidays
             </h2>
-            <div
-              className="p-4 max-h-[426px] overflow-scroll"
-              style={{
-                borderRadius: "16px",
-                border: "0.5px solid #CDDFE9"
-              }}
-            >
-              <Holiday />
-              <Holiday />
-              <Holiday />
-              <Holiday />
+            <div className="max-h-[426px] overflow-scroll">
+              <div
+                className="p-4 h-full"
+                style={{
+                  borderRadius: "16px",
+                  border: "0.5px solid #CDDFE9"
+                }}
+              >
+                <Holiday />
+                <Holiday />
+                <Holiday />
+                <Holiday />
+              </div>
             </div>
           </div>
           <div className="space-y-6 bg-white p-4 rounded-[24px]">
@@ -87,25 +116,24 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
             {leavesPending.length ? (
               leavesPending.map((l, i) => {
                 return (
-                  <div
-                    key={l.id}
-                    className="p-[10px] space-y-6 max-h-[426px] overflow-scroll"
-                  >
-                    <LeaveRequest
-                      id={l.id}
-                      departiment={l.departiment}
-                      description={l.description}
-                      endDate={
-                        l.updatedAt ? formatDate(new Date(l.updatedAt)) : ""
-                      }
-                      name={l.name}
-                      startDate={
-                        l.startDate ? formatDate(new Date(l.startDate)) : ""
-                      }
-                    />
-                    {i !== leavesPending.length - 1 && (
-                      <div className="w-full h-[0.5px] border-[0.5px] border-[#CDDFE9]"></div>
-                    )}
+                  <div key={l.id} className="max-h-[426px] overflow-scroll">
+                    <div className="p-[10px] space-y-6 h-full">
+                      <LeaveRequest
+                        id={l.id}
+                        departiment={l.departiment}
+                        description={l.description}
+                        endDate={
+                          l.updatedAt ? formatDate(new Date(l.updatedAt)) : ""
+                        }
+                        name={l.name}
+                        startDate={
+                          l.startDate ? formatDate(new Date(l.startDate)) : ""
+                        }
+                      />
+                      {i !== leavesPending.length - 1 && (
+                        <div className="w-full h-[0.5px] border-[0.5px] border-[#CDDFE9]"></div>
+                      )}
+                    </div>
                   </div>
                 )
               })
@@ -226,6 +254,25 @@ const LeaveAdminWidget = ({ leaves }: LeaveAdminWidgetProps) => {
                     </TableCell>
                   </TableRow>
                 ))}
+                {/* {leaves.length > 0 && (
+                  <TableRow className="w-full flex flex-shrink-0 items-center">
+                    <TableCell
+                      className="flex items-center flex-1"
+                      onClick={previousHandle}
+                    >
+                      <span className="flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[6.5px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer">
+                        <ArrowLeftSvg />
+                        Preview
+                      </span>
+                    </TableCell>
+                    <TableCell onClick={nextHandle}>
+                      <span className="flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[6.5px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer">
+                        Next
+                        <ArrowRightSvg />
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                )} */}
               </TableBody>
             </Table>
           ) : (

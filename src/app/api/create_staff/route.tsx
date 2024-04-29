@@ -64,6 +64,7 @@ export async function POST(req: Request) {
     const userExit = await prisma.user.findFirst({
       where: { email, companyId }
     })
+
     if (userExit) {
       return NextResponse.json(
         {
