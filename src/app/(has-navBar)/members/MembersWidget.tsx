@@ -1,6 +1,7 @@
 "use client"
 
 import { DeleteUserDialog } from "@/components/DeleteDialog"
+import { ArrowLeftSvg, ArrowRightSvg } from "@/components/Svg"
 import { Button } from "@/components/ui/button"
 import {
   Table,
@@ -11,6 +12,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { toast } from "@/components/ui/use-toast"
+import { cn } from "@/lib/utils"
 import { deleteUser, inviteUser } from "@/services/user"
 import { formatDate } from "@/utils/helpers"
 import { Invitations, User } from "@prisma/client"
@@ -167,48 +169,69 @@ const MembersWidget = ({
           Workers management
         </h2>
         {users.length > 0 ? (
-          <Table className="w-full">
-            <TableHeader className="w-full">
-              <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
-                <TableHead className=""> Workers name</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Department</TableHead>
+          <div className="py-0">
+            <Table className="w-full">
+              <TableHeader className="w-full">
+                <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
+                  <TableHead className=""> Workers name</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Department</TableHead>
 
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="w-full group">
-              {users.map((i) => (
-                <TableRow
-                  key={i.id}
-                  className="text-[#475467] text-[14px] font-normal leading-5"
-                >
-                  <TableCell>
-                    <span className="flex items-center space-x-2">
-                      <span className="w-6 h-6 rounded-full flex justify-center items-center bg-[#006A86] text-white">
-                        {i.name ? i.name[0].toUpperCase() : "-"}
-                      </span>
-                      <p>{i.name}</p>
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    {i.createdAt ? formatDate(new Date(i.createdAt)) : ""}
-                  </TableCell>
-                  <TableCell>{i.role} </TableCell>
-                  <TableCell>{i.department}</TableCell>
-
-                  <TableCell>
-                    {i.role === "Staff" ? (
-                      <DeleteUserDialog companyId={companyId} id={i.id} />
-                    ) : (
-                      ""
-                    )}
-                  </TableCell>
+                  <TableHead></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody className="w-full group">
+                {users.map((i) => (
+                  <TableRow
+                    key={i.id}
+                    className="text-[#475467] text-[14px] font-normal leading-5"
+                  >
+                    <TableCell>
+                      <span className="flex items-center space-x-2">
+                        <span className="w-6 h-6 rounded-full flex justify-center items-center bg-[#006A86] text-white">
+                          {i.name ? i.name[0].toUpperCase() : "-"}
+                        </span>
+                        <p>{i.name}</p>
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {i.createdAt ? formatDate(new Date(i.createdAt)) : ""}
+                    </TableCell>
+                    <TableCell>{i.role} </TableCell>
+                    <TableCell>{i.department}</TableCell>
+
+                    <TableCell>
+                      {i.role === "Staff" ? (
+                        <DeleteUserDialog companyId={companyId} id={i.id} />
+                      ) : (
+                        ""
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <div className="w-full border-[#EAECF0] border-[1px] flex items-center justify-between pt-[10px] pb-[13px] rounded-b-md px-5">
+              <Button
+                className="flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
+                text="Preview"
+                position="left"
+                svg={<ArrowLeftSvg />}
+                disabled={true}
+                // onClick={previousHandle}
+              />
+              <Button
+                className={cn(
+                  "flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
+                )}
+                text="Next"
+                svg={<ArrowRightSvg />}
+                // disabled={isLastPage}
+                // onClick={nextHandle}
+              />
+            </div>
+          </div>
         ) : (
           <p>No Users yet</p>
         )}
@@ -218,63 +241,85 @@ const MembersWidget = ({
           Invitations management
         </h2>
         {invitations.length > 0 ? (
-          <Table className="w-full">
-            <TableHeader className="w-full">
-              <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
-                <TableHead>Date</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="w-full group">
-              {invitations.map((i) => (
-                <TableRow
-                  key={i.id}
-                  className="text-[#475467] text-[14px] font-normal leading-5"
-                >
-                  <TableCell>
-                    {i.createdAt ? formatDate(new Date(i.createdAt)) : ""}
-                  </TableCell>
-
-                  <TableCell>{i.email} </TableCell>
-
-                  <TableCell>Staff </TableCell>
-
-                  <TableCell>{i.department}</TableCell>
-
-                  <TableCell>
-                    {!i.isActive ? (
-                      <span className="px-[12px] py-1 bg-[#ECFDF3] text-[#027A48] rounded-[16px]">
-                        Active
-                      </span>
-                    ) : (
-                      <span className="px-[12px] py-1 bg-[#FEF3F2] text-[#B42318] rounded-[16px]">
-                        Not active
-                      </span>
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    {i.isActive ? (
-                      <Button
-                        className="text-[#5F6368] px-[12px] py-[6px] border border-[#CDDFE9] hover:bg-white/80 bg-[#fff] rounded-[7px]"
-                        onClick={() =>
-                          resendInvitation(i.department, i.email, i.id)
-                        }
-                        text="Resend"
-                        loading={isLoading.isLoadingReInvite}
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </TableCell>
+          <div className="py-0">
+            <Table className="w-full">
+              <TableHeader className="w-full">
+                <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
+                  <TableHead>Date</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody className="w-full group">
+                {invitations.map((i) => (
+                  <TableRow
+                    key={i.id}
+                    className="text-[#475467] text-[14px] font-normal leading-5"
+                  >
+                    <TableCell>
+                      {i.createdAt ? formatDate(new Date(i.createdAt)) : ""}
+                    </TableCell>
+
+                    <TableCell>{i.email} </TableCell>
+
+                    <TableCell>Staff </TableCell>
+
+                    <TableCell>{i.department}</TableCell>
+
+                    <TableCell>
+                      {!i.isActive ? (
+                        <span className="px-[12px] py-1 bg-[#ECFDF3] text-[#027A48] rounded-[16px]">
+                          Active
+                        </span>
+                      ) : (
+                        <span className="px-[12px] py-1 bg-[#FEF3F2] text-[#B42318] rounded-[16px]">
+                          Not active
+                        </span>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {i.isActive ? (
+                        <Button
+                          className="text-[#5F6368] px-[12px] py-[6px] border border-[#CDDFE9] hover:bg-white/80 bg-[#fff] rounded-[7px]"
+                          onClick={() =>
+                            resendInvitation(i.department, i.email, i.id)
+                          }
+                          text="Resend"
+                          loading={isLoading.isLoadingReInvite}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            <div className="w-full border-[#EAECF0] border-[1px] flex items-center justify-between pt-[10px] pb-[13px] rounded-b-md px-5">
+              <Button
+                className="flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
+                text="Preview"
+                position="left"
+                svg={<ArrowLeftSvg />}
+                disabled={true}
+                // onClick={previousHandle}
+              />
+              <Button
+                className={cn(
+                  "flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
+                )}
+                text="Next"
+                svg={<ArrowRightSvg />}
+                // disabled={isLastPage}
+                // onClick={nextHandle}
+              />
+            </div>
+          </div>
         ) : (
           <p>No Users yet</p>
         )}
