@@ -41,6 +41,7 @@ export interface ButtonProps
   text?: string
   loading?: boolean
   svg?: React.ReactNode
+  position?: "right" | "left"
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -53,6 +54,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       svg,
       loading = false,
       asChild = false,
+      position = "right",
       ...props
     },
     ref
@@ -68,7 +70,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <Loader />
         ) : (
-          <span className={svg ? "flex items-center space-x-px" : ""}>
+          <span
+            className={cn(
+              svg ? "flex items-center space-x-px" : "",
+              position === "left" && "flex flex-row-reverse"
+            )}
+          >
             <p
               className={cn(
                 "text-[14px] font-medium leading-5",

@@ -9,11 +9,11 @@ const Table = React.forwardRef<
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
   <div
-    className="relative w-full overflow-auto rounded-md "
-    style={{
-      border: "1px solid var(--Gray-200, #EAECF0)",
-      borderRadius: "6px"
-    }}
+    className="relative w-full overflow-auto border border-[#EAECF0] border-b-transparent rounded-[6px] rounded-b-none"
+    // style={{
+    //   border: "1px  solid var(--Gray-200, )",
+    //   borderRadius: "6px"
+    // }}
   >
     <table
       ref={ref}

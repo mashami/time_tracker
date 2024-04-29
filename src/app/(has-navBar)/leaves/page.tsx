@@ -22,8 +22,6 @@ const LeavesPage = async () => {
   const user = data?.user as UserWithRelations
   const companyId = user.companyId
 
-  const page = 1
-
   const leavesAll = await getLeaves(companyId)
 
   if (user.role === "Admin") {

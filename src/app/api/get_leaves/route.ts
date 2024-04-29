@@ -15,14 +15,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const totalCount = await prisma.leave.count({ where: { companyId } })
-    const totalPages = Math.ceil(totalCount / pageSize)
-
-    console.log(" totalPages  ==>", totalPages)
-
     const leaves = await prisma.leave.findMany({
-      // skip: (page - 1) * pageSize,
-      take: totalPages,
+      take: pageSize,
       where: { companyId },
       orderBy: { createdAt: "desc" }
     })
