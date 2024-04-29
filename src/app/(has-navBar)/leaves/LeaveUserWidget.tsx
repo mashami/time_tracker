@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/table"
 import { Leave, User } from "@prisma/client"
 
-import { formatDate } from "@/utils/helpers"
-import { findDaysBetweenDates } from "./LeaveAdminWidget"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 
 interface LeaveUserWidgetProps {
   user: User

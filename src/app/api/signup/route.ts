@@ -58,11 +58,19 @@ export async function POST(req: Request) {
 
     const users = company.users
 
+    console.log(users)
+
     //Verifying if email exists
 
-    const userWithEmail = users?.find((user) => user.email === email)
+    const userWithEmailCompany = users?.find(
+      (user) => user.email === email && user.companyId === companyId
+    )
 
-    if (userWithEmail) {
+    const userWithEmail = await prisma.user.findFirst({
+      where: { email, companyId }
+    })
+
+    if (userWithEmail || userWithEmailCompany) {
       return NextResponse.json(
         { error: true, message: "User with this email exists." },
         { status: HttpStatusCode.BAD_REQUEST }

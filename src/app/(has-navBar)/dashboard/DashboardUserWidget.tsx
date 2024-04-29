@@ -10,9 +10,8 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { formatDate } from "@/utils/helpers"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Announcement, Leave } from "@prisma/client"
-import { findDaysBetweenDates } from "../leaves/LeaveAdminWidget"
 
 interface DashboardUserWidgetPageProps {
   leaves: Leave[]
@@ -142,18 +141,20 @@ const DashboardUserWidgetPage = ({
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
               Upcomming Holidays
             </h2>
-            <div
-              className="p-4 max-h-[320px] overflow-scroll"
-              style={{
-                borderRadius: "16px",
-                border: "0.5px solid #CDDFE9"
-              }}
-            >
-              <Holiday />
-              <Holiday />
-              <Holiday />
-              <Holiday />
-              <Holiday />
+            <div className="max-h-[320px] overflow-scroll">
+              <div
+                className="p-4 h-full"
+                style={{
+                  borderRadius: "16px",
+                  border: "0.5px solid #CDDFE9"
+                }}
+              >
+                <Holiday />
+                <Holiday />
+                <Holiday />
+                <Holiday />
+                <Holiday />
+              </div>
             </div>
           </div>
         </div>
@@ -167,23 +168,27 @@ const DashboardUserWidgetPage = ({
                 {`(${newAnnLength().toString()} new)`}
               </p>
             </div>
-            <div className="space-y-6 max-h-[320px] overflow-scroll">
-              {announcements.length - 1 > 0 ? (
-                announcements.map((ann) => (
-                  <AnnouncementCop
-                    key={ann.id}
-                    date={ann.updatedAt}
-                    description={ann.description}
-                    id={ann.id}
-                    owner={ann.owner}
-                    role={"Staff"}
-                  />
-                ))
-              ) : (
-                <p className="font-medium font-bricolage text-center">
-                  No Announcements yet
-                </p>
-              )}
+            <div className="max-h-[320px] overflow-scroll">
+              <div className="h-full">
+                <div className="space-y-6 h-full">
+                  {announcements.length - 1 > 0 ? (
+                    announcements.map((ann) => (
+                      <AnnouncementCop
+                        key={ann.id}
+                        date={ann.updatedAt}
+                        description={ann.description}
+                        id={ann.id}
+                        owner={ann.owner}
+                        role={"Staff"}
+                      />
+                    ))
+                  ) : (
+                    <p className="font-medium font-bricolage text-center">
+                      No Announcements yet
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </div>

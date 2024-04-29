@@ -13,8 +13,19 @@ export async function POST(req: Request) {
   }
 
   try {
+    // const company = await prisma.company.findUniqueOrThrow({
+    //   where: { id: companyId },
+    //   include: { users: true }
+    // })
+    // const users = company?.users
+
     const users = await prisma.user.findMany({
-      where: { companyId },
+      where: {
+        companyId,
+        NOT: {
+          role: "Admin"
+        }
+      },
       orderBy: { createdAt: "desc" }
     })
 
