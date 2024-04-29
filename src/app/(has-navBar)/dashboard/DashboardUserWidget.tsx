@@ -171,7 +171,7 @@ const DashboardUserWidgetPage = ({
             <div className="max-h-[320px] overflow-scroll">
               <div className="h-full">
                 <div className="space-y-6 h-full">
-                  {announcements.length - 1 > 0 ? (
+                  {announcements.length > 0 ? (
                     announcements.map((ann) => (
                       <AnnouncementCop
                         key={ann.id}
