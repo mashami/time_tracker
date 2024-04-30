@@ -19,7 +19,7 @@ const Memberspage = async () => {
   const allUsers = await getAllUserAsignCompany(companyId)
   // console.log(companyId)
 
-  // console.log(allUsers)
+  console.log(role)
 
   const invitedUser = await getAllInvitedUSers(companyId)
 

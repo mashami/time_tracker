@@ -28,13 +28,6 @@ export async function POST(req: Request) {
       orderBy: { createdAt: "desc" }
     })
 
-    if (!leaves || leaves.length === 0) {
-      return NextResponse.json(
-        { error: true, message: "No Leaves found for this company" },
-        { status: HttpStatusCode.NOT_FOUND }
-      )
-    }
-
     return NextResponse.json(
       {
         success: true,

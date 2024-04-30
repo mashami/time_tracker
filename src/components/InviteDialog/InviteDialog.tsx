@@ -118,7 +118,7 @@ const InviteDialog = ({ companyId, setIsOpen, isOpen }: InviteDialogProps) => {
                         DEV Department
                       </SelectItem>
                       <SelectItem value={Department.manager}>
-                        Marketin Department
+                        Marketing Department
                       </SelectItem>
                     </SelectContent>
                   </Select>

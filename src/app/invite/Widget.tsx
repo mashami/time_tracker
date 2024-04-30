@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { signUp } from "@/services/user"
+import { useAppContext } from "@/utils/context/AppContext"
 import { Invitations } from "@prisma/client"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
@@ -19,7 +20,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   const email = invitation.email
   const router = useRouter()
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  // const { resetUser } = useAppContext()
+  const { resetUser } = useAppContext()
 
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -66,12 +67,16 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
           variant: "destructive",
           description: resultSign.error
         })
+
         setIsLoading(false)
+
         return
       }
 
-      // resetUser()
-      return router.push("/dashboard")
+      resetUser()
+      router.push("/dashboard")
+      router.refresh()
+      return
     } catch (error) {
       toast({
         variant: "destructive",

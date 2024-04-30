@@ -63,7 +63,7 @@ const LeaveUserWidget = ({
             leaveOngoing.map((l) => (
               <div
                 key={l.id}
-                className="max-h-[100px] space-y-4 overflow-scroll"
+                className="max-h-[100px] space-y-4 overflow-y-scroll"
               >
                 <LeaveIn leave={l} />
               </div>

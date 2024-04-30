@@ -241,7 +241,7 @@ const MembersWidget = ({
           Invitations management
         </h2>
         {invitations.length > 0 ? (
-          <div className="py-0">
+          <div>
             <Table className="w-full">
               <TableHeader className="w-full">
                 <TableRow className="text-[#475467] text-[14px] font-normal leading-5">
@@ -321,7 +321,7 @@ const MembersWidget = ({
             </div>
           </div>
         ) : (
-          <p>No Users yet</p>
+          <p>No Invitations yet</p>
         )}
       </div>
     </section>

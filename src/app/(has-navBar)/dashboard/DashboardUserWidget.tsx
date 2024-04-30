@@ -166,7 +166,7 @@ const DashboardUserWidgetPage = ({
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
               Upcomming Holidays
             </h2>
-            <div className="max-h-[320px] overflow-scroll">
+            <div className="max-h-[320px] overflow-y-scroll">
               <div
                 className="p-4 h-full"
                 style={{
@@ -193,7 +193,7 @@ const DashboardUserWidgetPage = ({
                 {`(${newAnnLength().toString()} new)`}
               </p>
             </div>
-            <div className="max-h-[320px] overflow-scroll">
+            <div className="max-h-[320px] overflow-y-scroll">
               <div className="h-full">
                 <div className="space-y-6 h-full">
                   {announcements.length > 0 ? (
