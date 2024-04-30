@@ -163,8 +163,8 @@ const Menu = () => {
             <div
               className="w-[40px] h-[40px] cursor-pointer rounded-full bg-[#F9F9FA] hover:bg-[#F9F9FA]/60 flex items-center justify-center text-white uppercase"
               onClick={() => {
-                signOut({ callbackUrl: "/signin" })
                 resetUser()
+                signOut({ callbackUrl: "/signin" })
               }}
             >
               <LogOutSvg />
