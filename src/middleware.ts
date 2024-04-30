@@ -2,7 +2,12 @@ export { default } from "next-auth/middleware"
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 export const config = {
-  matcher: ["/dashboard/:path* ", "/leaves/:path"]
+  matcher: [
+    "/dashboard/:path* ",
+    "/leaves/:path*",
+    "/members/:path*",
+    "/announcements/:path*"
+  ]
 }
 
 export async function middleware(req: NextRequest) {
@@ -13,7 +18,10 @@ export async function middleware(req: NextRequest) {
 
   if (
     !session &&
-    (path.startsWith("/dashboard") || path.startsWith("/leaves"))
+    (path.startsWith("/dashboard") ||
+      path.startsWith("/leaves") ||
+      path.startsWith("/members") ||
+      path.startsWith("/announcements"))
   ) {
     const url = req.nextUrl.clone()
     url.pathname = "/signin"

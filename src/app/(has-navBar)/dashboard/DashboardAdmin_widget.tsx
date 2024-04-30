@@ -332,7 +332,7 @@ const DashboardAdminPageWidget = ({
                       </p>
                     </div>
                     <div className="flex items-start space-x-[10px] pb-[16px]">
-                      <span className="w-[12px] h-[12px] rounded-full bg-[#0BA42D] flex flex-shrink-0 mt-1"></span>
+                      <span className="w-[12px] h-[12px] rounded-full bg-[#006A86] flex flex-shrink-0 mt-1"></span>
                       <p className="text-[14px] leading-[21px] font-normal text-black">
                         {ann.description}
                       </p>
