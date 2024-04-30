@@ -116,8 +116,8 @@ const Menu = () => {
                   Break
                 </p>
               </div>
-              <div className="py-1 px-2 rounded-full border-[0.5px] border-[#CDDFE9] bg-white">
-                <p className="font-medium leading-[10px] text-[7px]">
+              <div className="flex items-center justify-center h-5 px-3 rounded-full bg-[#006A86]">
+                <p className="font-medium leading-[10px] text-[8px] text-white">
                   Comming soon
                 </p>
               </div>
@@ -129,8 +129,8 @@ const Menu = () => {
                   Shift
                 </p>
               </div>
-              <div className="py-1 px-2 rounded-full border-[0.5px] border-[#CDDFE9] bg-white">
-                <p className="font-medium leading-[10px] text-[7px]">
+              <div className="flex items-center justify-center h-5 px-3 rounded-full bg-[#006A86]">
+                <p className="font-medium leading-[10px] text-[8px] text-white">
                   Comming soon
                 </p>
               </div>
