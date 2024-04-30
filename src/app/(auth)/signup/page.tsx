@@ -66,8 +66,7 @@ const signupPage = () => {
         return
       }
 
-      router.push("/dashboard")
-      return
+      return router.push("/members")
     } catch (error) {
       toast({
         variant: "destructive",

@@ -14,16 +14,22 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
+import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
-import { getLeaves2 } from "@/services/user"
+import { changeLeave, getLeaves2 } from "@/services/user"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
-import { Leave } from "@prisma/client"
+import { Leave, Status } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
 interface LeaveAdminWidgetProps {
   leaves: Leave[]
   companyId: string
+}
+
+export interface IsLoadingType {
+  isLoadingIsProv: boolean
+  isLoadingIsRej: boolean
 }
 
 const LeaveAdminWidget = ({
@@ -34,6 +40,11 @@ const LeaveAdminWidget = ({
   const [leaves, setLeaves] = useState<Leave[]>(initialLeaves)
   const [isLastPage, setIsLastPage] = useState<boolean>(false)
   const [isFirstPage, setIsFirstPage] = useState<boolean>(false)
+  const [isLoading, setLoading] = useState<IsLoadingType>({
+    isLoadingIsProv: false,
+    isLoadingIsRej: false
+  })
+
   const leavesPending = initialLeaves.filter(
     (leave) => leave.status === "Pending"
   )
@@ -70,6 +81,99 @@ const LeaveAdminWidget = ({
     router.refresh()
   }
 
+  const changeLeaveStatusHandler = async (
+    leaveId: string,
+    statusLL: Status
+  ) => {
+    if (!leaveId) {
+      return toast({
+        variant: "destructive",
+        description: "leave ID is required"
+      })
+    }
+
+    if (statusLL === Status.IsApproved) {
+      setLoading({
+        ...isLoading,
+        isLoadingIsProv: true
+      })
+    } else {
+      setLoading({
+        ...isLoading,
+        isLoadingIsRej: true
+      })
+    }
+
+    try {
+      const result = await changeLeave({
+        leaveId,
+        status: statusLL
+      })
+
+      if (result.error) {
+        toast({
+          variant: "destructive",
+          description: result.message
+        })
+
+        if (statusLL === Status.IsApproved) {
+          setLoading({
+            ...isLoading,
+            isLoadingIsProv: false
+          })
+        } else {
+          setLoading({
+            ...isLoading,
+            isLoadingIsRej: false
+          })
+        }
+
+        return
+      }
+
+      toast({
+        description: result.message
+      })
+
+      router.refresh()
+
+      if (statusLL === Status.IsApproved) {
+        setLoading({
+          ...isLoading,
+          isLoadingIsProv: false
+        })
+      } else {
+        setLoading({
+          ...isLoading,
+          isLoadingIsRej: false
+        })
+      }
+
+      router.refresh()
+
+      return
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Server Error, please try again"
+      })
+
+      if (statusLL === Status.IsApproved) {
+        setLoading({
+          ...isLoading,
+          isLoadingIsProv: false
+        })
+      } else {
+        setLoading({
+          ...isLoading,
+          isLoadingIsRej: false
+        })
+      }
+
+      return
+    }
+  }
+
   return (
     <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
       <div className="flex items-center ">
@@ -83,7 +187,7 @@ const LeaveAdminWidget = ({
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
               Upcomming Holidays
             </h2>
-            <div className="max-h-[426px] overflow-scroll">
+            <div className="max-h-[426px] overflow-y-scroll">
               <div
                 className="p-4 h-full"
                 style={{
@@ -105,7 +209,7 @@ const LeaveAdminWidget = ({
             {leavesPending.length ? (
               leavesPending.map((l, i) => {
                 return (
-                  <div key={l.id} className="max-h-[426px] overflow-scroll">
+                  <div key={l.id} className="max-h-[426px] overflow-y-scroll">
                     <div className="p-[10px] space-y-6 h-full">
                       <LeaveRequest
                         id={l.id}
@@ -118,6 +222,8 @@ const LeaveAdminWidget = ({
                         startDate={
                           l.startDate ? formatDate(new Date(l.startDate)) : ""
                         }
+                        onClick={changeLeaveStatusHandler}
+                        isLoading={isLoading}
                       />
                       {i !== leavesPending.length - 1 && (
                         <div className="w-full h-[0.5px] border-[0.5px] border-[#CDDFE9]"></div>
@@ -244,32 +350,6 @@ const LeaveAdminWidget = ({
                       </TableCell>
                     </TableRow>
                   ))}
-                  {/* {leaves.length > 0 && (
-                    <TableRow className="w-full flex flex-shrink-0 items-center justify-between">
-                      <TableCell className="flex items-center flex-1">
-                        <Button
-                          className="flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
-                          text="Preview"
-                          position="left"
-                          svg={<ArrowLeftSvg />}
-                          disabled={isFirstPage}
-                          onClick={previousHandle}
-                        />
-                      </TableCell>
-
-                      <TableCell>
-                        <Button
-                          className={cn(
-                            "flex items-center gap-[6.5px] border-[0.823px] border-[#EAECF0] rounded-[6.5px] px-[11.5px] py-[4px] text-[11.4px] text-[#344054] font-semibold leading-[16.462px] cursor-pointer bg-white hover:bg-white/80"
-                          )}
-                          text="Next"
-                          svg={<ArrowRightSvg />}
-                          disabled={isLastPage}
-                          onClick={nextHandle}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )} */}
                 </TableBody>
               </Table>
               <div className="w-full border-[#EAECF0] border-[1px] flex items-center justify-between pt-[10px] pb-[13px] rounded-b-md px-5">

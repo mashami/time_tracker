@@ -1,5 +1,5 @@
 import { getInvitation } from "@/services/user"
-import { Prisma } from "@prisma/client"
+import { Invitations, Prisma } from "@prisma/client"
 import WidgetSignUpPage from "../Widget"
 
 interface invitePageProps {
@@ -10,18 +10,22 @@ interface invitePageProps {
 export type UserWithRelations = Prisma.UserGetPayload<{}>
 
 const invitePage = async ({ params: { invitationId } }: invitePageProps) => {
-  const invitationData = await getInvitation(invitationId)
+  const resultFech = await getInvitation(invitationId)
 
-  if (!invitationData.error) {
+  const invitation = resultFech.data as Invitations
+
+  if (!resultFech.error && invitation.isActive) {
     return (
       <div>
-        <WidgetSignUpPage invitation={invitationData.data} />
+        <WidgetSignUpPage invitation={invitation} />
       </div>
     )
   }
   return (
-    <div>
-      <h1>Error to find the invitation</h1>
+    <div className="h-screen w-screen flex items-center justify-center">
+      <h1 className="font-bold text-[32px] font-bricolage leading-6 uppercase">
+        This invitation link has expired
+      </h1>
     </div>
   )
 }

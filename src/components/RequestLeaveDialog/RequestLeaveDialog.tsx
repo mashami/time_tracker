@@ -135,7 +135,7 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Leave type" />
                 </SelectTrigger>
-                <SelectContent className="max-h-[200px] overflow-scroll">
+                <SelectContent className="max-h-[200px] overflow-y-scroll">
                   {typesLeave.map((type, i) => (
                     <SelectItem key={i} value={type.value}>
                       {type.label}

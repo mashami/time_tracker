@@ -26,27 +26,6 @@ const DashboardPage = async () => {
 
   if (role === "Admin") {
     return redirect("/members")
-    // const allUsers = await getAllUserAsignCompany(companyId)
-    // // console.log(allUsers.data)
-
-    // const invitedUser = await getAllInvitedUSers(companyId)
-
-    // return (
-    //   <Suspense
-    //     fallback={
-    //       <div className="w-full h-full grid place-items-center">
-    //         <Loader />
-    //       </div>
-    //     }
-    //   >
-    //     <DashboardAdminPageWidget
-    //       companyId={companyId}
-    //       users={allUsers.data}
-    //       invitations={invitedUser.data}
-    //       announcements={announcements.data}
-    //     />
-    //   </Suspense>
-    // )
   } else if (role === "Staff") {
     const leaves = await getLeavesByUser({
       userId: userId,

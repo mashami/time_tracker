@@ -24,6 +24,8 @@ const LeavesPage = async () => {
 
   const leavesAll = await getLeaves(companyId)
 
+  console.log(leavesAll)
+
   if (user.role === "Admin") {
     try {
       const data = await getUser(userId)
