@@ -14,7 +14,6 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { requestLeave } from "@/services/user"
-import { User } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { CaretRightSvg } from "../Svg"
@@ -24,11 +23,10 @@ import { Textarea } from "../ui/textarea"
 import { toast } from "../ui/use-toast"
 
 interface AnnouncementDialogProps {
-  companyId: string
-  user: User
+  departmentId: string
 }
 
-const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
+const RequestLeaveDialog = ({ departmentId }: AnnouncementDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [title, setTitle] = useState<string>("")
   const [startDate, setStartDate] = useState<Date>()
@@ -62,13 +60,11 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
 
     try {
       const result = await requestLeave({
-        userId: user.id,
-        companyId: companyId,
         title,
         startDate,
         endDate,
         description,
-        department: user.department
+        departmentId
       })
 
       if (result.error) {
@@ -148,12 +144,14 @@ const RequestLeaveDialog = ({ user, companyId }: AnnouncementDialogProps) => {
                   type="date"
                   placeholder="Start date"
                   value={startDate ? startDate.toISOString().split("T")[0] : ""}
+                  min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setStartDate(new Date(e.target.value))}
                 />
                 <Input
                   type="date"
                   placeholder="End date"
                   value={endDate ? endDate.toISOString().split("T")[0] : ""}
+                  min={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setEndDate(new Date(e.target.value))}
                 />
               </div>

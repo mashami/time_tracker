@@ -5,9 +5,10 @@ import { sendMail } from "@/utils/mailService"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { email, department, companyId, invitationId } = await req.json()
+  const { email, role, companyId, departmentId, invitationId } =
+    await req.json()
 
-  if (!email || !department || !companyId) {
+  if (!email || !role || !companyId || !departmentId) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
       { status: HttpStatusCode.BAD_REQUEST }
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
       const companyExit = await prisma.company.findFirst({
         where: { id: companyId }
       })
-      const checkUserInvitation = await prisma.invitations.findFirst({
+      const checkUserInvitation = await prisma.invitation.findFirst({
         where: { id: invitationId, isActive: true }
       })
 
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
     const companyExit = await prisma.company.findFirst({
       where: { id: companyId }
     })
+
     if (!companyExit) {
       return NextResponse.json(
         { error: true, message: "Company Id doesn't exit" },
@@ -75,7 +77,7 @@ export async function POST(req: Request) {
       )
     }
 
-    const checkInvitationIsActive = await prisma.invitations.findFirst({
+    const checkInvitationIsActive = await prisma.invitation.findFirst({
       where: { email, isActive: true }
     })
     if (checkInvitationIsActive) {
@@ -85,12 +87,24 @@ export async function POST(req: Request) {
       )
     }
 
-    const invitation = await prisma.invitations.create({
+    const checkDepartment = await prisma.department.findFirst({
+      where: { id: departmentId }
+    })
+
+    if (checkInvitationIsActive) {
+      return NextResponse.json(
+        { error: true, message: "An invite is in pending" },
+        { status: HttpStatusCode.BAD_REQUEST }
+      )
+    }
+
+    const invitation = await prisma.invitation.create({
       data: {
         email,
         companyId,
         isActive: true,
-        department: department
+        role,
+        departmentId
       }
     })
 
@@ -108,7 +122,7 @@ export async function POST(req: Request) {
     Click on the following link to sign up as staff of ${companyName} company:
     <br>
     <Link href="invite/[invitationId]" as={${invitationLink}}>
-      Sign Up
+      Sign Up as staff from ${checkDepartment?.name} department
     </Link>
   </p>
 `

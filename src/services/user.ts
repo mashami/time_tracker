@@ -1,12 +1,14 @@
 import {
   AnnouncementTypes,
   changeLeaveTypes,
+  DepartmentTypes,
   getLeavesByUserTypes,
   invitationType,
   LeaveType,
   registerType,
   SigninType,
-  SignupType
+  SignupType,
+  UpdateLeaveProps
 } from "@/utils/types"
 
 export const logIn = async ({ email, password }: SigninType) => {
@@ -26,10 +28,11 @@ export const signUp = async ({
   email,
   password,
   name,
-  department,
+  departmentId,
   retypePassword,
   companyId,
-  invitaionId
+  invitaionId,
+  role
 }: SignupType) => {
   const response = await fetch(`/api/signup`, {
     method: "POST",
@@ -38,10 +41,11 @@ export const signUp = async ({
       email,
       password,
       name,
-      department,
+      departmentId,
       retypePassword,
       companyId,
-      invitaionId
+      invitaionId,
+      role
     }),
     cache: "no-store"
   })
@@ -57,10 +61,10 @@ export const register = async ({
   password,
   retypedPassword
 }: registerType) => {
-  const response = await fetch(`/api/register`, {
+  const response = await fetch(`/api/register_company`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, email, retypedPassword, password }),
+    body: JSON.stringify({ name, email, password, retypedPassword }),
     cache: "no-store"
   })
 
@@ -97,23 +101,22 @@ export const getUserInfo = async () => {
 
 //create_staff
 
-export const inviteUser = async ({
-  email,
-  department,
-  companyId,
-  invitationId
-}: invitationType) => {
-  const response = await fetch(`/api/create_staff`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, department, companyId, invitationId }),
-    cache: "no-store"
-  })
+// export const inviteUser = async ({
+//   email,
+//   departmentId,
+//   invitationId
+// }: invitationType) => {
+//   const response = await fetch(`/api/create_staff`, {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ email, departmentId, invitationId }),
+//     cache: "no-store"
+//   })
 
-  const result = await response.json()
+//   const result = await response.json()
 
-  return result
-}
+//   return result
+// }
 
 export const getInvitation = async (invitationId: string) => {
   const response = await fetch(process.env.APP_URL + `/api/getInvitation`, {
@@ -129,24 +132,21 @@ export const getInvitation = async (invitationId: string) => {
 }
 
 export const requestLeave = async ({
-  companyId,
-  userId,
   startDate,
   endDate,
   description,
   title,
-  department
+  departmentId
 }: LeaveType) => {
   const response = await fetch(`/api/request_leave`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      companyId,
-      userId,
       startDate,
       endDate,
       description,
-      title
+      title,
+      departmentId
     }),
     cache: "no-store"
   })
@@ -203,14 +203,11 @@ export const getLeavesByUser = async ({
   return result
 }
 
-export const deleteUser = async ({
-  userId,
-  companyId
-}: getLeavesByUserTypes) => {
+export const deleteUser = async (userId: string) => {
   const response = await fetch(`/api/delete_staff`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, companyID: companyId }),
+    body: JSON.stringify({ userId }),
     cache: "no-store"
   })
 
@@ -265,19 +262,19 @@ export const getAllInvitedUSers = async (companyId: string) => {
 }
 
 export const createAnnouncement = async ({
-  companyId,
+  departmentId,
   owner,
   description,
-  title
+  audience
 }: AnnouncementTypes) => {
   const response = await fetch(`/api/create_announcement`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       owner,
-      title,
       description,
-      companyId
+      departmentId,
+      audience
     }),
     cache: "no-store"
   })
@@ -305,6 +302,110 @@ export const deleteAnnouncement = async (announcementId: string) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ announcementId }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const createDepartment = async ({
+  companyId,
+  name
+}: DepartmentTypes) => {
+  const response = await fetch(`/api/create_department`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      companyId
+    }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const getCompanyDepartments = async (companyId: string) => {
+  const response = await fetch(
+    process.env.APP_URL + `/api/get_company_departments`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ companyId }),
+      cache: "no-store"
+    }
+  )
+
+  const result = await response.json()
+
+  return result
+}
+
+export const getCompanyDepartments2 = async ({
+  companyId
+}: DepartmentTypes) => {
+  const response = await fetch(`/api/get_company_departments`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ companyId }),
+    cache: "no-store"
+  })
+
+  console.log(companyId)
+
+  const result = await response.json()
+
+  return result
+}
+
+export const inviteUser = async ({
+  email,
+  role,
+  departmentId,
+  invitationId
+}: invitationType) => {
+  const response = await fetch(`/api/invite_user`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email,
+      role,
+      departmentId,
+      invitationId
+    }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const approveUser = async (userId: string) => {
+  const response = await fetch(`/api/approve_user`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userId }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const UpdateLeaveDays = async ({
+  companyId,
+  leavesDays
+}: UpdateLeaveProps) => {
+  const response = await fetch(`/api/updateLeaveDays`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ days: leavesDays, companyId }),
     cache: "no-store"
   })
 

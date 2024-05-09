@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table"
-import { Leave, User } from "@prisma/client"
+import { Leave } from "@prisma/client"
 
 import { ArrowLeftSvg, ArrowRightSvg } from "@/components/Svg"
 import { Button } from "@/components/ui/button"
@@ -17,16 +17,16 @@ import { cn } from "@/lib/utils"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 
 interface LeaveUserWidgetProps {
-  user: User
   leaves: Leave[]
-  companyId: string
   leavesAll: Leave[]
+  departmentID: string
+  remaingDays: number
 }
 const LeaveUserWidget = ({
-  user,
   leaves,
-  companyId,
-  leavesAll
+  departmentID,
+  leavesAll,
+  remaingDays
 }: LeaveUserWidgetProps) => {
   const leavesPending = leaves.filter((l) => l.status === "Pending")
   const currentDate = formatDate(new Date())
@@ -73,14 +73,16 @@ const LeaveUserWidget = ({
           )}
         </div>
       </div>
-      {/* <LeavePercentages /> */}
 
       <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
         <div className="flex items-center justify-between">
           <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
             Leave application summary
           </h2>
-          <RequestLeaveDialog companyId={companyId} user={user} />
+          <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
+            Remaining days ({remaingDays} days)
+          </h2>
+          <RequestLeaveDialog departmentId={departmentID} />
         </div>
 
         {leaves.length > 0 ? (
@@ -160,7 +162,8 @@ const LeaveUserWidget = ({
                       {findDaysBetweenDates(
                         l.startDate ? formatDate(new Date(l.startDate)) : "",
                         l.endDate ? formatDate(new Date(l.endDate)) : ""
-                      )}
+                      )}{" "}
+                      Days
                     </TableCell>
                   </TableRow>
                 ))}

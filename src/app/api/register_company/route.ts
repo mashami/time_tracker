@@ -6,6 +6,8 @@ import { NextResponse } from "next/server"
 export async function POST(req: Request) {
   const { name, email, password, retypedPassword } = await req.json()
 
+  console.log("Heeeee")
+
   // Check if all fields are sent from client
   if (!name || !email || !password || !retypedPassword) {
     return NextResponse.json(
@@ -23,7 +25,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Check if Email already exists in DB
     const companyWithEmail = await prisma.company.findFirst({
       where: { email }
     })
@@ -38,22 +39,12 @@ export async function POST(req: Request) {
     // Hash password
     const hashedPassword = await hash(password, 10)
 
-    // Save Company in DB
     const company = await prisma.company.create({
       data: {
         email,
         name,
-        password: hashedPassword
-      }
-    })
-
-    const user = await prisma.user.create({
-      data: {
-        name: "Admin",
-        email,
-        role: "Admin",
-        companyId: company.id,
-        password: hashedPassword
+        password: hashedPassword,
+        leaveNumber: 0
       }
     })
 
@@ -63,10 +54,33 @@ export async function POST(req: Request) {
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }
-    if (!user) {
+    // console.log("company.leaveNumber ===>", company.leaveNumber)
+    // console.log("company.id ===>", company.id)
+
+    try {
+      const user = await prisma.user.create({
+        data: {
+          name: "Admin",
+          email: company.email,
+          role: "Admin",
+          companyId: company.id,
+          password: hashedPassword,
+          isActive: true,
+          remainingLeave: company.leaveNumber
+          // departmentName: ""
+        }
+      })
+
+      if (!user) {
+        return NextResponse.json(
+          { error: true, message: "Error creating user. Please try again" },
+          { status: HttpStatusCode.BAD_REQUEST }
+        )
+      }
+    } catch (error) {
       return NextResponse.json(
-        { error: true, message: "Error creating user. Please try again" },
-        { status: HttpStatusCode.BAD_REQUEST }
+        { error: true, message: "User is not sign in" },
+        { status: HttpStatusCode.INTERNAL_SERVER }
       )
     }
 

@@ -1,12 +1,19 @@
 import { prisma } from "@/lib/prisma"
+import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
+import { findDaysBetweenDates } from "@/utils/helpers"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { startDate, endDate, title, description, userId, companyId } =
+  const { startDate, endDate, title, description, departmentId } =
     await req.json()
 
-  if (!startDate || !endDate || !title || !description) {
+  const user = await getCurrentUser()
+  const userId = user?.id
+
+  const companyId = user?.companyId
+
+  if (!startDate || !endDate || !title || !description || !departmentId) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
       { status: HttpStatusCode.BAD_REQUEST }
@@ -20,6 +27,25 @@ export async function POST(req: Request) {
   }
 
   try {
+    const department = await prisma.department.findFirst({
+      where: {
+        id: departmentId
+      },
+      select: {
+        name: true
+      }
+    })
+
+    if (!department) {
+      return NextResponse.json(
+        {
+          error: true,
+          message: "Department not found"
+        },
+        { status: HttpStatusCode.BAD_REQUEST }
+      )
+    }
+
     const company = await prisma.company.findFirst({
       where: {
         id: companyId,
@@ -72,7 +98,33 @@ export async function POST(req: Request) {
       )
     }
 
-    const department = user.department
+    const totalRequestedDays = findDaysBetweenDates(startDate, endDate)
+
+    console.log(" totalRequestedDays ===>", totalRequestedDays)
+    console.log("Type ====>", typeof totalRequestedDays)
+
+    const totalLeave = user.companyLeaves
+
+    console.log(totalLeave)
+
+    console.log("Type ===>", typeof totalLeave)
+
+    const remainingLeave = user.remainingLeave
+
+    if (
+      totalRequestedDays > totalLeave ||
+      totalRequestedDays > remainingLeave
+    ) {
+      return NextResponse.json(
+        {
+          error: true,
+          message: "Your requested leave days is more than you allowed to have"
+        },
+        { status: HttpStatusCode.BAD_REQUEST }
+      )
+    }
+
+    const departmentName = department.name
     const name = user.name
 
     const leave = await prisma.leave.create({
@@ -82,7 +134,8 @@ export async function POST(req: Request) {
         endDate,
         startDate,
         title,
-        departiment: department,
+        departmentId,
+        departmentName,
         name,
         companyId,
         userId,

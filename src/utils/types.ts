@@ -1,4 +1,4 @@
-import { Status } from "@prisma/client"
+import { BelongType, Role, Status } from "@prisma/client"
 
 export interface SigninType {
   email: string
@@ -14,19 +14,20 @@ export interface registerType {
 
 export interface invitationType {
   email: string
-  department: string
-  companyId: string
+  departmentId: string
   invitationId?: string
+  role: Role
 }
 
 export interface SignupType {
   name: string
   email: string
   password: string
-  department: string
+  departmentId: string | null
   retypePassword: string
   companyId: string
   invitaionId: string
+  role: Role
 }
 
 export interface SvgTypes {
@@ -42,9 +43,7 @@ export interface LeaveType {
   endDate: Date
   title: string
   description: string
-  userId: string
-  companyId: string
-  department: string
+  departmentId: string
 }
 
 export interface changeLeaveTypes {
@@ -64,8 +63,23 @@ export interface Department {
 }
 
 export interface AnnouncementTypes {
-  title: string
   owner: string
   description: string
+  departmentId?: string
+  audience: BelongType
+}
+
+export interface DepartmentTypes {
   companyId: string
+  name?: string
+}
+
+export interface IsLoadingType {
+  isLoadingIsProv: boolean
+  isLoadingIsRej: boolean
+}
+
+export interface UpdateLeaveProps {
+  companyId: string
+  leavesDays: number
 }

@@ -1,14 +1,25 @@
 import { prisma } from "@/lib/prisma"
+import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
 
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { owner, title, description, companyId } = await req.json()
+  const { owner, description, departmentId, audience } = await req.json()
 
-  if (!owner || !title || !description || !companyId) {
+  const user = await getCurrentUser()
+  const companyId = user?.companyId
+
+  if (!owner || !audience || !description) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
+      { status: HttpStatusCode.BAD_REQUEST }
+    )
+  }
+
+  if (!companyId) {
+    return NextResponse.json(
+      { error: true, message: "Company ID is required" },
       { status: HttpStatusCode.BAD_REQUEST }
     )
   }
@@ -28,11 +39,38 @@ export async function POST(req: Request) {
       )
     }
 
+    if (departmentId) {
+      const result = await prisma.announcement.create({
+        data: {
+          description,
+          owner,
+          belong: audience,
+          companyId,
+          departmentId
+        }
+      })
+
+      if (!result) {
+        return NextResponse.json(
+          {
+            error: true,
+            message: "Announcement failed to add. Please try again"
+          },
+          { status: HttpStatusCode.BAD_REQUEST }
+        )
+      }
+
+      return NextResponse.json(
+        { message: "Announcement added sucessfully" },
+        { status: HttpStatusCode.OK }
+      )
+    }
+
     const result = await prisma.announcement.create({
       data: {
         description,
         owner,
-        title,
+        belong: audience,
         companyId
       }
     })

@@ -22,8 +22,6 @@ export const authOptions: NextAuthOptions = {
 
         const user = data.user as User
 
-        // console.log("user logged in===>", { user })
-
         if (!user) {
           console.log("User doesn't found")
 
@@ -33,8 +31,9 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           name: user.name,
-          companyId: user.companyId,
-          role: user.role
+          role: user.role,
+          email: user.email,
+          companyId: user.companyId
         }
       }
     })
@@ -57,7 +56,8 @@ export const authOptions: NextAuthOptions = {
         id: t.id,
         name: t.name,
         companyId: t.companyId,
-        role: t.role
+        role: t.role,
+        email: t.email
       }
 
       // console.log({ mergedUser })
@@ -75,7 +75,8 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           name: user.name,
           companyId: user.companyId,
-          role: user.role
+          role: user.role,
+          email: user.email
         }
       }
 

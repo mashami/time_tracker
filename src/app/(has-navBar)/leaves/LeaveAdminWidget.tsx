@@ -1,8 +1,7 @@
 "use client"
 
-import { Holiday } from "@/components/Holiday"
-
-import { LeaveRequest } from "@/components/LeaveRequest"
+import { AddingLeaveDaysDialog } from "@/components/AddingLeaveDaysDialog"
+import { LeaveIn, LeaveRequest } from "@/components/LeaveRequest"
 import { ArrowLeftSvg, ArrowRightSvg } from "@/components/Svg"
 import { Button } from "@/components/ui/button"
 
@@ -18,6 +17,7 @@ import { toast } from "@/components/ui/use-toast"
 import { cn } from "@/lib/utils"
 import { changeLeave, getLeaves2 } from "@/services/user"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
+import { IsLoadingType } from "@/utils/types"
 import { Leave, Status } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -25,16 +25,15 @@ import { useEffect, useState } from "react"
 interface LeaveAdminWidgetProps {
   leaves: Leave[]
   companyId: string
-}
-
-export interface IsLoadingType {
-  isLoadingIsProv: boolean
-  isLoadingIsRej: boolean
+  managersLeaves: Leave[]
+  leaveDays: number | undefined
 }
 
 const LeaveAdminWidget = ({
   leaves: initialLeaves,
-  companyId
+  companyId,
+  managersLeaves,
+  leaveDays
 }: LeaveAdminWidgetProps) => {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [leaves, setLeaves] = useState<Leave[]>(initialLeaves)
@@ -45,9 +44,16 @@ const LeaveAdminWidget = ({
     isLoadingIsRej: false
   })
 
-  const leavesPending = initialLeaves.filter(
+  const currentDate = formatDate(new Date())
+  const leaveOngoing = leaves.filter(
+    (l) =>
+      l.status === "IsApproved" && formatDate(new Date(l.endDate)) > currentDate
+  )
+
+  const leavesPending = managersLeaves.filter(
     (leave) => leave.status === "Pending"
   )
+
   const router = useRouter()
 
   const fetchLeaves = async (page: number) => {
@@ -183,24 +189,23 @@ const LeaveAdminWidget = ({
       </div>
       <div className="space-y-6">
         <div className="w-full grid grid-cols-2 gap-6">
-          <div className="space-y-6 bg-white p-4 rounded-[24px]">
-            <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
-              Upcomming Holidays
-            </h2>
-            <div className="max-h-[426px] overflow-y-scroll">
-              <div
-                className="p-4 h-full"
-                style={{
-                  borderRadius: "16px",
-                  border: "0.5px solid #CDDFE9"
-                }}
-              >
-                <Holiday />
-                <Holiday />
-                <Holiday />
-                <Holiday />
-              </div>
-            </div>
+          <div className="p-4 bg-white rounded-[24px] space-y-4">
+            <p className=" font-ibm_plex_mono font-medium leading-6">
+              Who’s on leave in the company
+            </p>
+
+            {leaveOngoing.length > 0 ? (
+              leaveOngoing.map((l) => (
+                <div
+                  key={l.id}
+                  className="max-h-[100px] space-y-4 overflow-y-scroll p-[10px] bg-[#f9f9f9] rounded-2xl"
+                >
+                  <LeaveIn leave={l} />
+                </div>
+              ))
+            ) : (
+              <p>No Leaves yet</p>
+            )}
           </div>
           <div className="space-y-6 bg-white p-4 rounded-[24px]">
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
@@ -213,7 +218,7 @@ const LeaveAdminWidget = ({
                     <div className="p-[10px] space-y-6 h-full">
                       <LeaveRequest
                         id={l.id}
-                        departiment={l.departiment}
+                        departmentName={l.departmentName}
                         description={l.description}
                         endDate={
                           l.updatedAt ? formatDate(new Date(l.updatedAt)) : ""
@@ -240,9 +245,14 @@ const LeaveAdminWidget = ({
           </div>
         </div>
         <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
-          <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
-            Current leave application
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
+              Current leave application
+            </h2>
+            <p>{leaveDays} Leaves days in year</p>
+            <AddingLeaveDaysDialog companyId={companyId} />
+          </div>
+
           {leaves.length > 0 ? (
             <div className="py-0">
               <Table className="w-full">

@@ -22,6 +22,7 @@ export async function POST(req: Request) {
     const users = await prisma.user.findMany({
       where: {
         companyId,
+        isActive: true,
         NOT: {
           role: "Admin"
         }

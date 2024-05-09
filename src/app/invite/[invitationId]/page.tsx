@@ -1,5 +1,5 @@
 import { getInvitation } from "@/services/user"
-import { Invitations, Prisma } from "@prisma/client"
+import { Invitation, Prisma } from "@prisma/client"
 import WidgetSignUpPage from "../Widget"
 
 interface invitePageProps {
@@ -12,7 +12,9 @@ export type UserWithRelations = Prisma.UserGetPayload<{}>
 const invitePage = async ({ params: { invitationId } }: invitePageProps) => {
   const resultFech = await getInvitation(invitationId)
 
-  const invitation = resultFech.data as Invitations
+  const invitation = resultFech.data as Invitation
+
+  // console.log(invitation)
 
   if (!resultFech.error && invitation.isActive) {
     return (

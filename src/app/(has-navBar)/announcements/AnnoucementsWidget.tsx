@@ -6,24 +6,26 @@ import { Announcement, Role } from "@prisma/client"
 
 interface AnnouncementsWidgetProps {
   announcements: Announcement[]
-  companyId: string
+  departmentID?: string | null
   role: Role
 }
 
 const AnnouncementsWidget = ({
   announcements,
-  companyId,
+  departmentID,
   role
 }: AnnouncementsWidgetProps) => {
   const announcementLength = announcements.length
 
   return (
-    <section className="w-full p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <section className="mx-[85.5px] p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Announcements
         </h1>
-        {role === "Admin" && <AnnouncementDialog companyId={companyId} />}
+        {(role === "Admin" || role === "manager") && (
+          <AnnouncementDialog departmentId={departmentID} role={role} />
+        )}
       </div>
       <div className="w-full p-4 rounded-[24px] bg-white space-y-6">
         <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">

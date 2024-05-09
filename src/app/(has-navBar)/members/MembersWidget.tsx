@@ -1,6 +1,7 @@
 "use client"
 
 import { DeleteUserDialog } from "@/components/DeleteDialog"
+import { Holiday } from "@/components/Holiday"
 import { ArrowLeftSvg, ArrowRightSvg } from "@/components/Svg"
 import { Button } from "@/components/ui/button"
 import {
@@ -12,17 +13,21 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { toast } from "@/components/ui/use-toast"
+import { UserRequest } from "@/components/UserRequest"
 import { cn } from "@/lib/utils"
-import { deleteUser, inviteUser } from "@/services/user"
+import { deleteUser } from "@/services/user"
 import { formatDate } from "@/utils/helpers"
-import { Invitations, User } from "@prisma/client"
+import { User } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface MembersWidgetProps {
   users: User[]
   companyId: string
-  invitations: Invitations[]
+  userRequests: Pick<
+    User,
+    "id" | "departmentName" | "departmentId" | "name" | "updatedAt"
+  >[]
 }
 
 export interface isLoadingType {
@@ -34,7 +39,7 @@ export interface isLoadingType {
 const MembersWidget = ({
   users,
   companyId,
-  invitations
+  userRequests
 }: MembersWidgetProps) => {
   const [isLoading, setIsLoading] = useState<isLoadingType>({
     isLoadingInvite: false,
@@ -42,71 +47,6 @@ const MembersWidget = ({
     isLoadingReInvite: false
   })
   const router = useRouter()
-
-  const resendInvitation = async (
-    department: string,
-    email: string,
-    id: string
-  ) => {
-    if (!companyId || !department || !email) {
-      return toast({
-        variant: "destructive",
-        description: "companyId, department and email as well required"
-      })
-    }
-
-    setIsLoading({
-      ...isLoading,
-      isLoadingReInvite: true
-    })
-
-    try {
-      const result = await inviteUser({
-        companyId,
-        department,
-        email,
-        invitationId: id
-      })
-
-      if (result.error) {
-        toast({
-          variant: "destructive",
-          description: result.error
-        })
-        setIsLoading({
-          ...isLoading,
-          isLoadingReInvite: false
-        })
-        return
-      }
-
-      toast({
-        variant: "default",
-        description: result.message
-      })
-
-      router.refresh()
-
-      setIsLoading({
-        ...isLoading,
-        isLoadingReInvite: false
-      })
-
-      return
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        description: "Server error, Please Try again"
-      })
-
-      setIsLoading({
-        ...isLoading,
-        isLoadingReInvite: false
-      })
-
-      return
-    }
-  }
 
   const deleteUserHandler = async (userId: string) => {
     if (!userId || !companyId) {
@@ -120,7 +60,7 @@ const MembersWidget = ({
       isLoadingDelete: true
     })
     try {
-      const result = await deleteUser({ userId, companyId })
+      const result = await deleteUser(userId)
 
       if (result.error) {
         toast({
@@ -158,11 +98,63 @@ const MembersWidget = ({
       return
     }
   }
+
   return (
     <section className="w-full p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
       <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
         Members
       </h1>
+      <div className="w-full grid grid-cols-2 gap-6">
+        <div>
+          <div className="space-y-6 bg-white p-4 rounded-[24px]">
+            <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
+              Upcomming Holidays
+            </h2>
+            <div className="max-h-[320px] overflow-y-scroll">
+              <div
+                className="p-4 h-full"
+                style={{
+                  borderRadius: "16px",
+                  border: "0.5px solid #CDDFE9"
+                }}
+              >
+                <Holiday />
+                <Holiday />
+                <Holiday />
+                <Holiday />
+                <Holiday />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="space-y-6 bg-white p-4 rounded-[24px]">
+            <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
+              User invite requests
+            </h2>
+            {userRequests.length > 0 ? (
+              userRequests.map((user) => (
+                <div
+                  key={user.id}
+                  className="max-h-[320px] overflow-y-scroll space-y-4"
+                >
+                  <UserRequest
+                    name={user.name}
+                    departiment={user.departmentName ? user.departmentName : ""}
+                    id={user.id}
+                    date={user.updatedAt}
+                  />
+                </div>
+              ))
+            ) : (
+              <p className="flex items-center justify-center font-ibm_plex_mono font-medium">
+                {" "}
+                No user request yet
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
         <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
@@ -199,14 +191,10 @@ const MembersWidget = ({
                       {i.createdAt ? formatDate(new Date(i.createdAt)) : ""}
                     </TableCell>
                     <TableCell>{i.role} </TableCell>
-                    <TableCell>{i.department}</TableCell>
+                    <TableCell>{i.departmentName}</TableCell>
 
                     <TableCell>
-                      {i.role === "Staff" ? (
-                        <DeleteUserDialog companyId={companyId} id={i.id} />
-                      ) : (
-                        ""
-                      )}
+                      <DeleteUserDialog companyId={companyId} id={i.id} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -236,7 +224,7 @@ const MembersWidget = ({
           <p>No Users yet</p>
         )}
       </div>
-      <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
+      {/* <div className="w-full p-4 rounded-[24px] bg-white space-y-[24px]">
         <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
           Invitations management
         </h2>
@@ -323,7 +311,7 @@ const MembersWidget = ({
         ) : (
           <p>No Invitations yet</p>
         )}
-      </div>
+      </div> */}
     </section>
   )
 }
