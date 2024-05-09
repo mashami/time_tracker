@@ -1,11 +1,16 @@
 import { prisma } from "@/lib/prisma"
+import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
 import { sendMail } from "@/utils/mailService"
 
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { userId, companyID } = await req.json()
+  const { userId } = await req.json()
+
+  const user = await getCurrentUser()
+
+  const companyID = user?.companyId
 
   if (!userId || !companyID) {
     return NextResponse.json(
@@ -38,7 +43,7 @@ export async function POST(req: Request) {
         where: { id: userId, companyId: companyID }
       })
 
-      await prisma.invitations.delete({
+      await prisma.invitation.delete({
         where: { email: email, companyId: companyID }
       })
 

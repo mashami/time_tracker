@@ -5,25 +5,27 @@ import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { signUp } from "@/services/user"
 import { useAppContext } from "@/utils/context/AppContext"
-import { Invitations } from "@prisma/client"
+import { Invitation } from "@prisma/client"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 interface WidgetSignUpPageProps {
-  invitation: Invitations
+  invitation: Invitation
 }
 const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
   const [name, setName] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [retypedPassword, setRetypedPassword] = useState<string>("")
+
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const email = invitation.email
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const { resetUser } = useAppContext()
 
-  const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const onSubmitHandler = async () => {
     if (!name || !password || !retypedPassword) {
       return toast({
         variant: "destructive",
@@ -43,10 +45,11 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
         email,
         password,
         name,
-        department: invitation.department,
         companyId: invitation.companyId,
         retypePassword: retypedPassword,
-        invitaionId: invitation.id
+        invitaionId: invitation.id,
+        departmentId: invitation.departmentId,
+        role: invitation.role
       })
       if (result?.error) {
         toast({
@@ -97,7 +100,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
           <h1 className="text-[20px] font-medium leading-[30px] text-center">
             Enter your details to continue in the system.
           </h1>
-          <form action={""} onSubmit={onSubmitHandler} className="space-y-6">
+          <form action={""} className="space-y-6">
             <div>
               <label className="text-[14px] leading-5">Your name</label>
               <Input
@@ -130,6 +133,7 @@ const WidgetSignUpPage = ({ invitation }: WidgetSignUpPageProps) => {
               }}
               loading={isLoading}
               disabled={isLoading}
+              onClick={onSubmitHandler}
             />
           </form>
         </div>

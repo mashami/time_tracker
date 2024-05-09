@@ -1,23 +1,34 @@
 import { Loader } from "@/components/Loader"
-import { authOptions } from "@/lib/auth"
-import { getAnnouncementCompany } from "@/services/user"
+import { getAnnouncements } from "@/lib/actions"
+import { prisma } from "@/lib/prisma"
+import { getCurrentUser } from "@/lib/session"
 import { Role } from "@prisma/client"
-import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
 import AnnouncementsWidget from "./AnnoucementsWidget"
 
 const Announcementpage = async () => {
-  const session = await getServerSession(authOptions)
+  const user = await getCurrentUser()
 
-  if (!session) {
+  if (!user) {
     return redirect("/signin")
   }
 
-  const companyId = session?.user.companyId
-  const role = session?.user.role as Role
+  const departmentID = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: {
+      departmentId: true
+    }
+  })
 
-  const announcements = await getAnnouncementCompany(companyId)
+  const departmentId = departmentID?.departmentId as any
+
+  console.log("departmentId ===>", departmentId)
+
+  const companyId = user.companyId
+  const role = user.role as Role
+
+  const announcements = await getAnnouncements(role, companyId, departmentId)
 
   return (
     <Suspense
@@ -28,8 +39,8 @@ const Announcementpage = async () => {
       }
     >
       <AnnouncementsWidget
-        announcements={announcements.data}
-        companyId={companyId}
+        announcements={announcements}
+        departmentID={departmentId}
         role={role}
       />
     </Suspense>

@@ -7,14 +7,22 @@ export async function POST(req: Request) {
   const {
     name,
     email,
-    department,
+    departmentId,
     password,
     invitaionId,
     retypePassword,
-    companyId
+    companyId,
+    role
   } = await req.json()
 
-  if (!name || !department || !email || !password || !retypePassword) {
+  if (
+    !name ||
+    !departmentId ||
+    !email ||
+    !password ||
+    !retypePassword ||
+    !role
+  ) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
       { status: HttpStatusCode.BAD_REQUEST }
@@ -33,6 +41,7 @@ export async function POST(req: Request) {
       { status: HttpStatusCode.BAD_REQUEST }
     )
   }
+
   if (!companyId) {
     return NextResponse.json(
       { error: true, message: "Provide the company Id" },
@@ -58,8 +67,6 @@ export async function POST(req: Request) {
 
     const users = company.users
 
-    console.log(users)
-
     //Verifying if email exists
 
     const userWithEmailCompany = users?.find(
@@ -77,18 +84,39 @@ export async function POST(req: Request) {
       )
     }
 
+    const isActive = role === "manager" ? true : false
+
     // Hash password
     const hashedPassword = await hash(password, 10)
+
+    const departmentExit = await prisma.department.findFirst({
+      where: { id: departmentId }
+    })
+
+    if (!departmentExit) {
+      return NextResponse.json(
+        {
+          error: true,
+          message: "The Id passed for department is not exit"
+        },
+        { status: HttpStatusCode.BAD_REQUEST }
+      )
+    }
+    const departmentName = departmentExit.name
 
     // Save user in DB
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        role: "Staff",
+        role: role,
+        departmentId,
         companyId,
         password: hashedPassword,
-        department
+        isActive: isActive,
+        departmentName,
+        companyLeaves: company.leaveNumber,
+        remainingLeave: company.leaveNumber
       }
     })
 
@@ -99,7 +127,7 @@ export async function POST(req: Request) {
       )
     }
 
-    await prisma.invitations.update({
+    await prisma.invitation.update({
       where: { id: invitaionId },
       data: {
         isActive: false,

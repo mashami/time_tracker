@@ -2,7 +2,7 @@
 
 import { getUserInfo } from "@/services/user"
 import { User } from "@prisma/client"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useState } from "react"
 
 interface AppContextData {
   userInfo: User | null
@@ -29,10 +29,6 @@ interface AppContextProviderProps {
 export const AppContextProvider = ({ children }: AppContextProviderProps) => {
   const [userInfo, setUserInfo] = useState<User | null>(null)
 
-  useEffect(() => {
-    fetchUser()
-  }, [])
-
   const fetchUser = async () => {
     try {
       const result = await getUserInfo()
@@ -48,6 +44,7 @@ export const AppContextProvider = ({ children }: AppContextProviderProps) => {
 
   const value: AppContextData = {
     userInfo,
+
     fetchUser,
     resetUser: () => setUserInfo(null)
   }

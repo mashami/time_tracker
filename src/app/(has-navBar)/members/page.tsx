@@ -1,6 +1,7 @@
 import { Loader } from "@/components/Loader"
 import { authOptions } from "@/lib/auth"
-import { getAllInvitedUSers, getAllUserAsignCompany } from "@/services/user"
+import { prisma } from "@/lib/prisma"
+import { getAllUserAsignCompany } from "@/services/user"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
@@ -17,11 +18,19 @@ const Memberspage = async () => {
   const role = session?.user.role
   const userId = session?.user.id
   const allUsers = await getAllUserAsignCompany(companyId)
-  // console.log(companyId)
 
-  console.log(role)
+  const userRequests = await prisma.user.findMany({
+    where: { isActive: false, companyId },
+    select: {
+      name: true,
+      departmentId: true,
+      id: true,
+      departmentName: true,
+      updatedAt: true
+    }
+  })
 
-  const invitedUser = await getAllInvitedUSers(companyId)
+  // const invitedUser = await getAllInvitedUSers(companyId)
 
   return (
     <Suspense
@@ -34,7 +43,7 @@ const Memberspage = async () => {
       <MembersWidget
         users={allUsers.data}
         companyId={companyId}
-        invitations={invitedUser.data}
+        userRequests={userRequests}
       />
     </Suspense>
   )

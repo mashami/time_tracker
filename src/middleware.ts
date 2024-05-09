@@ -7,6 +7,7 @@ export const config = {
     "/leaves/:path*",
     "/members/:path*",
     "/announcements/:path*"
+    // "/departments/:path*"
   ]
 }
 
@@ -14,14 +15,14 @@ export async function middleware(req: NextRequest) {
   const session = await getToken({ req })
   const url = req.nextUrl
   const path = url.pathname
-  console.log("path ==>", url)
 
   if (
-    !session &&
-    (path.startsWith("/dashboard") ||
-      path.startsWith("/leaves") ||
-      path.startsWith("/members") ||
-      path.startsWith("/announcements"))
+    (!session &&
+      (path.startsWith("/dashboard") ||
+        path.startsWith("/leaves") ||
+        path.startsWith("/members") ||
+        path.startsWith("/announcements"))) ||
+    path.startsWith("/departments")
   ) {
     const url = req.nextUrl.clone()
     url.pathname = "/signin"

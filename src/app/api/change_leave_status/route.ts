@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { HttpStatusCode } from "@/utils/enums"
+import { findDaysBetweenDates } from "@/utils/helpers"
 import { sendMail } from "@/utils/mailService"
 import { NextResponse } from "next/server"
 
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
   }
   if (!status) {
     return NextResponse.json(
-      { error: true, message: "status and email are required" },
+      { error: true, message: "status are required" },
       { status: HttpStatusCode.BAD_REQUEST }
     )
   }
@@ -40,13 +41,58 @@ export async function POST(req: Request) {
       )
     }
 
+    const userId = leave.userId
+
+    const startDate = leave.startDate.toDateString()
+    const endDate = leave.endDate.toDateString()
+
+    const totalRequestedDays = findDaysBetweenDates(startDate, endDate)
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: true, message: "NO User ID founded " },
+        { status: HttpStatusCode.BAD_REQUEST }
+      )
+    }
+
     if (status === "IsApproved") {
-      await prisma.leave.update({
+      const result = await prisma.leave.update({
         where: { id: leaveId },
         data: {
-          status: "IsApproved"
+          status: "IsApproved",
+          User: {
+            update: {
+              where: {
+                id: userId
+              },
+              data: {
+                remainingLeave: {
+                  decrement: totalRequestedDays
+                }
+              }
+            }
+          }
         }
       })
+
+      if (!result) {
+        return NextResponse.json(
+          { error: true, message: "Fail to Approve a leave " },
+          { status: HttpStatusCode.BAD_REQUEST }
+        )
+      }
+
+      // await prisma.user.update({
+      //   where: {
+      //     id: userId
+      //   },
+      //   data: {
+      //     remainingLeave: {
+      //       increment: totalRequestedDays
+      //     }
+      //   }
+      // })
+
       await sendMail(
         `${companyName} company invitation`,
         leave.email,

@@ -1,10 +1,12 @@
 import { Loader } from "@/components/Loader"
-import { authOptions } from "@/lib/auth"
+import { getAllLeavesByDepartment } from "@/lib/actions"
+import { prisma } from "@/lib/prisma"
+import { getCurrentUser } from "@/lib/session"
 import { getAnnouncementCompany, getLeavesByUser } from "@/services/user"
-import { Prisma } from "@prisma/client"
-import { getServerSession } from "next-auth"
+import { Prisma, Role } from "@prisma/client"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
+import DashboardManagerWidgetPage from "./DashboardManagerWidget"
 import DashboardUserWidgetPage from "./DashboardUserWidget"
 
 export type UserWithRelations = Prisma.UserGetPayload<{}>
@@ -12,25 +14,57 @@ export type UserWithRelations = Prisma.UserGetPayload<{}>
 const DashboardPage = async () => {
   //Instead of using session again while I have context holds a user who is sign in  I will be using a context API later
 
-  const session = await getServerSession(authOptions)
+  const user = await getCurrentUser()
 
-  if (!session) {
+  if (!user) {
     return redirect("/signin")
   }
 
-  const companyId = session?.user.companyId
-  const role = session?.user.role
-  const userId = session?.user.id
+  const companyId = user.companyId
+  const role = user.role as Role
+  const userId = user.id
 
   const announcements = await getAnnouncementCompany(companyId)
 
   if (role === "Admin") {
     return redirect("/members")
   } else if (role === "Staff") {
-    const leaves = await getLeavesByUser({
-      userId: userId,
-      companyId: companyId
+    const userIsActive = await prisma.user.findUnique({
+      where: { id: user?.id },
+      select: {
+        isActive: true
+      }
     })
+
+    if (!user) {
+      throw new Error("User not found")
+    }
+
+    if (userIsActive?.isActive === false) {
+      return redirect("/notActive")
+    } else {
+      const leaves = await getLeavesByUser({
+        userId: userId,
+        companyId: companyId
+      })
+      return (
+        <Suspense
+          fallback={
+            <div className="w-full h-full grid place-items-center">
+              <Loader />
+            </div>
+          }
+        >
+          <DashboardUserWidgetPage
+            leaves={leaves.data}
+            announcements={announcements.data}
+          />
+        </Suspense>
+      )
+    }
+  } else if (role === "manager") {
+    const leaves = await getAllLeavesByDepartment(user.id)
+
     return (
       <Suspense
         fallback={
@@ -39,8 +73,8 @@ const DashboardPage = async () => {
           </div>
         }
       >
-        <DashboardUserWidgetPage
-          leaves={leaves.data}
+        <DashboardManagerWidgetPage
+          leaves={leaves}
           announcements={announcements.data}
         />
       </Suspense>

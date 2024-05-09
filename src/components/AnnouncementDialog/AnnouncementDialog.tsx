@@ -7,47 +7,57 @@ import {
   DialogTitle
 } from "@/components/ui/dialog"
 import { createAnnouncement } from "@/services/user"
+import { BelongType, Role } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
+import { Switch } from "../ui/switch"
 import { Textarea } from "../ui/textarea"
 import { toast } from "../ui/use-toast"
 
 interface AnnouncementDialogProps {
-  companyId: string
+  departmentId?: string | null
+  role: Role
 }
 
-const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
+const AnnouncementDialog = ({
+  departmentId,
+  role
+}: AnnouncementDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [owner, setOwner] = useState<string>("")
-  const [title, setTitle] = useState<string>("")
   const [description, setDescription] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [audience, setAudience] = useState<BelongType>("all")
 
   const router = useRouter()
 
   const onClickHandler = async () => {
-    if (!description || !owner || !title) {
+    if (!description || !owner) {
       return toast({
         variant: "destructive",
         description: "All field required"
       })
     }
-    if (!companyId) {
-      return toast({
-        variant: "destructive",
-        description: "Company ID is required"
-      })
-    }
+
     setIsLoading(true)
 
     try {
-      const result = await createAnnouncement({
-        companyId,
+      let result
+      if (departmentId) {
+        result = await createAnnouncement({
+          departmentId,
+          description,
+          owner,
+          audience
+        })
+      }
+
+      result = await createAnnouncement({
         description,
         owner,
-        title
+        audience
       })
 
       if (result.error) {
@@ -60,7 +70,6 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
       }
       setDescription("")
       setOwner("")
-      setTitle("")
       setIsOpen(false)
 
       router.refresh()
@@ -102,17 +111,38 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
                 onChange={(e) => setOwner(e.target.value)}
                 value={owner}
               />
-              <Input
-                placeholder="Announcement title"
-                onChange={(e) => setTitle(e.target.value)}
-                value={title}
-              />
+
               <Textarea
                 placeholder="Announcement"
                 className="placeholder:text-[#949494] placeholder:text-[14px] laceholder:leading-[23.5px] laceholder:font-medium"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
               />
+              {role === "Admin" && (
+                <div className="p-[10px] bg-[#F9F9F9] rounded-[4px] space-y-[12px] w-full">
+                  <div className=" flex items-center justify-between">
+                    <p className="text-[14px] font-medium leading-[21px]">
+                      All
+                    </p>
+
+                    <Switch
+                      checked={audience === "all"}
+                      onCheckedChange={() => setAudience("all")}
+                    />
+                  </div>
+
+                  <div className=" flex items-center justify-between">
+                    <p className="text-[14px] font-medium leading-[21px]">
+                      Managers
+                    </p>
+
+                    <Switch
+                      checked={audience === "managers"}
+                      onCheckedChange={() => setAudience("managers")}
+                    />
+                  </div>
+                </div>
+              )}
               <div className="flex items-center w-full space-x-2">
                 <Button
                   variant={"secondary"}
@@ -121,7 +151,6 @@ const AnnouncementDialog = ({ companyId }: AnnouncementDialogProps) => {
                   onClick={() => {
                     setIsOpen(false), setDescription("")
                     setOwner("")
-                    setTitle("")
                   }}
                   disabled={isLoading}
                 />

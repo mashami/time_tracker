@@ -13,7 +13,6 @@ export const findDaysBetweenDates = (
   const startDate = new Date(startDateStr)
   const endDate = new Date(endDateStr)
 
-  // Check if the parsed dates are valid
   if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
     throw new Error(
       "Invalid date format. Please provide dates in the format 'YYYY-MM-DD'."
@@ -35,5 +34,43 @@ export const findDaysBetweenDates = (
 
   const days = Math.floor(diffMillis / (1000 * 60 * 60 * 24))
 
-  return days + `${days > 1 ? "Days" : "Day"}`
+  return days
+}
+
+export const isEmailValid = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+export const formatDateConverted = (inputDate: string) => {
+  // Parse the input date string
+  const date = new Date(inputDate)
+
+  // Get month name
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ]
+  const month = monthNames[date.getMonth()]
+
+  // Get day of the month
+  const day = date.getDate()
+
+  // Get year
+  const year = date.getFullYear()
+
+  // Format the date
+  const formattedDate = `${month} ${day}, ${year}`
+
+  return formattedDate
 }

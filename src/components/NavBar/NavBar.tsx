@@ -1,24 +1,18 @@
 "use client"
 
-import { useAppContext } from "@/utils/context/AppContext"
-import { Role } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { Department, User } from "@prisma/client"
+import { useState } from "react"
 import { InviteDialog } from "../InviteDialog"
 import { NotificationSvg } from "../Svg"
 import { Button } from "../ui/button"
 
-const NavBar = () => {
-  const { userInfo } = useAppContext()
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-  const [companyId, setCompanyId] = useState<string>("")
-  const [role, setRole] = useState<Role>()
+interface NavBarProps {
+  user: Pick<User, "id" | "companyId" | "name" | "role" | "departmentId">
+  departments: Department[]
+}
 
-  useEffect(() => {
-    if (userInfo) {
-      setCompanyId(userInfo?.companyId)
-      setRole(userInfo.role)
-    }
-  }, [userInfo])
+const NavBar = ({ user, departments }: NavBarProps) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   return (
     <>
@@ -26,7 +20,7 @@ const NavBar = () => {
         <div className="w-10 h-10 bg-[#F9F9FA] rounded-full flex items-center justify-center">
           <NotificationSvg />
         </div>
-        {role === "Admin" && companyId && (
+        {(user.role === "Admin" || user.role === "manager") && (
           <Button
             text="Invite Staff"
             className="text-white bg-black hover:bg-black"
@@ -34,10 +28,13 @@ const NavBar = () => {
           />
         )}
       </div>
+
       <InviteDialog
-        companyId={companyId}
         isOpen={isOpen}
         setIsOpen={setIsOpen}
+        departments={departments}
+        role={user.role}
+        departmentId={user.departmentId}
       />
     </>
   )

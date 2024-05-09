@@ -33,7 +33,7 @@ const DeleteUserDialog = ({ id, companyId }: DeleteUserDialogProps) => {
     }
     setIsLoading(true)
     try {
-      const result = await deleteUser({ userId: id, companyId })
+      const result = await deleteUser(id)
 
       if (result.error) {
         toast({
