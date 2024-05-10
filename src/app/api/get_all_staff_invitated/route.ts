@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const InvitedUsers = await prisma.invitations.findMany({
+    const InvitedUsers = await prisma.invitation.findMany({
       where: { companyId },
       orderBy: { createdAt: "desc" }
     })
