@@ -129,11 +129,17 @@ const InviteDialog = ({
                         </SelectTrigger>
 
                         <SelectContent>
-                          {departments.map((d) => (
-                            <SelectItem key={d.id} value={d.id}>
-                              {d.name} Department
-                            </SelectItem>
-                          ))}
+                          {departments.length > 0 ? (
+                            departments.map((d) => (
+                              <SelectItem key={d.id} value={d.id}>
+                                {d.name} Department
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <p className="text-[12px] font-ibm_plex_mono font-medium leading-4 text-center py-6">
+                              No department yet, Please create Department
+                            </p>
+                          )}
                         </SelectContent>
                       </Select>
 
