@@ -83,3 +83,13 @@ export interface UpdateLeaveProps {
   companyId: string
   leavesDays: number
 }
+
+export interface UpdateDepartmentNameProps {
+  departmentId: string
+  departmentName: string
+}
+
+export interface UpdateUserManagerProps {
+  departmentId: string
+  userId: string
+}

@@ -249,7 +249,9 @@ const LeaveAdminWidget = ({
             <h2 className="font-medium leading-5 text-[16px] font-ibm_plex_mono">
               Current leave application
             </h2>
-            <p>{leaveDays} Leaves days in year</p>
+            <p className="font-ibm_plex_mono font-bold leading-6">
+              {leaveDays} days for leave
+            </p>
             <AddingLeaveDaysDialog companyId={companyId} />
           </div>
 

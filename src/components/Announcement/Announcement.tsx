@@ -30,14 +30,17 @@ const AnnouncementCop = ({
       <div className="flex items-start space-x-[10px] pb-[16px]">
         <div className="relative w-full">
           <div
-            className={cn(role === "Admin" && "pr-10", "flex space-x-[10px]")}
+            className={cn(
+              (role === "Admin" || role === "manager") && "pr-10",
+              "flex space-x-[10px]"
+            )}
           >
             <span className="w-[12px] h-[12px] rounded-full bg-[#006A86] flex flex-shrink-0 mt-1"></span>
             <p className="text-[14px] leading-[21px] font-normal text-black">
               {description}
             </p>
           </div>
-          {role === "Admin" && (
+          {(role === "Admin" || role === "manager") && (
             <div className="absolute right-0 -top-1">
               <DeleteAnnouncemetDialog id={id} />
             </div>

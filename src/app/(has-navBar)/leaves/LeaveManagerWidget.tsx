@@ -13,11 +13,7 @@ import {
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
 
-import {
-  findDaysBetweenDates,
-  formatDate,
-  formatDateConverted
-} from "@/utils/helpers"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Leave, Status } from "@prisma/client"
 
 import { toast } from "@/components/ui/use-toast"
@@ -248,14 +244,10 @@ const LeaveManagerWidget = ({
                     <TableCell>{l.title}</TableCell>
 
                     <TableCell className="flex flex-nowrap">
-                      {formatDateConverted(
-                        l.startDate ? formatDate(new Date(l.startDate)) : ""
-                      )}
+                      {l.startDate ? formatDate(new Date(l.startDate)) : ""}
                     </TableCell>
                     <TableCell>
-                      {formatDateConverted(
-                        l.endDate ? formatDate(new Date(l.endDate)) : ""
-                      )}
+                      {l.endDate ? formatDate(new Date(l.endDate)) : ""}
                     </TableCell>
                     <TableCell className="">
                       {l.status === "IsApproved" && (

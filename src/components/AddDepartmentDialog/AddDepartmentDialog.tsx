@@ -54,15 +54,15 @@ const AddDepartmentDialog = ({ companyId }: AddDepartmentDialogProps) => {
         )
       }
 
-      return (
-        toast({
-          variant: "default",
-          description: result.message
-        }),
+      toast({
+        variant: "default",
+        description: result.message
+      }),
         setIsLoading(false),
         setName(""),
         setIsOpen(false)
-      )
+      router.refresh()
+      return
     } catch (error) {
       toast({
         variant: "destructive",

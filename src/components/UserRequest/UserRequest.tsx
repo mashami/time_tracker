@@ -1,5 +1,5 @@
 import { approveUser, deleteUser } from "@/services/user"
-import { formatDate, formatDateConverted } from "@/utils/helpers"
+import { formatDate } from "@/utils/helpers"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "../ui/button"
@@ -119,7 +119,7 @@ const UserRequest = ({ name, departiment, id, date }: UserRequestProp) => {
     }
   }
 
-  const dateTime = formatDateConverted(formatDate(date))
+  const dateTime = formatDate(date)
 
   return (
     <div className="space-y-6 bg-[#F9F9F9] p-[10px] rounded-[12px]">

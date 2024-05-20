@@ -1,8 +1,4 @@
-import {
-  findDaysBetweenDates,
-  formatDate,
-  formatDateConverted
-} from "@/utils/helpers"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Leave } from "@prisma/client"
 
 interface LeaveInProps {
@@ -22,9 +18,7 @@ const LeaveIn = ({ leave }: LeaveInProps) => {
       </div>
       <div className="flex items-center space-x-2">
         <p className="font-medium leading-4 text-[12px] text-black">
-          {formatDateConverted(
-            leave.startDate ? formatDate(new Date(leave.startDate)) : ""
-          )}
+          {leave.startDate ? formatDate(new Date(leave.startDate)) : ""}
         </p>
         <span className="flex items-center space-x-1">
           <span className="w-1.5 h-1.5 rounded-full bg-[#006A86]"></span>

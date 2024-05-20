@@ -147,7 +147,7 @@ const SideMenu = ({ departments, user }: SideMenuProps) => {
               </div>
             </div>
 
-            {(user.role === "Admin" || user.role === "manager") && (
+            {user.role === "Admin" && (
               <div className="pt-[79px]">
                 <div
                   className="p-[10px] flex items-center  space-x-[10px] bg-[#F9F9F9] cursor-pointer rounded-md"

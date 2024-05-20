@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "@/components/ui/dialog"
-import { deleteUser } from "@/services/user"
+import { DeleteDepartment } from "@/services/user"
 import { useRouter } from "next/navigation"
 import { Dispatch, SetStateAction, useState } from "react"
 import { DeleteSmallSvg } from "../Svg"
@@ -19,46 +19,49 @@ interface DeleteUserDialogProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>
 }
 
-const DeleteUserDialog = ({ id, isOpen, setIsOpen }: DeleteUserDialogProps) => {
+const DeleteDepartmentDialog = ({
+  id,
+  isOpen,
+  setIsOpen
+}: DeleteUserDialogProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
-  const deleteUserHandler = async () => {
+  const deleteHandle = async (id: string) => {
     if (!id) {
       return toast({
         variant: "destructive",
-        description: "ID are required"
+        description: "ID is required"
       })
     }
     setIsLoading(true)
     try {
-      const result = await deleteUser(id)
-
+      const result = await DeleteDepartment(id)
       if (result.error) {
         toast({
           variant: "destructive",
-          description: result.message
+          description: "ID is required"
         })
         setIsLoading(false)
         return
       }
 
-      router.refresh()
+      toast({
+        description: result.message
+      })
 
       setIsLoading(false)
 
-      return toast({
-        description: "Staff has deleted sucessfully"
-      })
+      router.refresh()
+
+      return
     } catch (error) {
       toast({
         variant: "destructive",
-        description: "Server error, Please Try again buddy!"
+        description: "Error occur, Please try again"
       })
-
       setIsLoading(false)
-
       return
     }
   }
@@ -75,7 +78,7 @@ const DeleteUserDialog = ({ id, isOpen, setIsOpen }: DeleteUserDialogProps) => {
             </DialogTitle>
             <DialogDescription className="p-6 space-y-8">
               <p className="text-[#FF4A6B] font-ibm_plex_mono font-medium leading-6 text-center">
-                Are you sure you want to delete this User
+                Are you sure you want to delete this Department
               </p>
               <div className="flex items-center w-full space-x-4">
                 <Button
@@ -94,7 +97,7 @@ const DeleteUserDialog = ({ id, isOpen, setIsOpen }: DeleteUserDialogProps) => {
                     boxShadow:
                       " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"
                   }}
-                  onClick={deleteUserHandler}
+                  onClick={() => deleteHandle(id)}
                   loading={isLoading}
                   disabled={isLoading}
                 />
@@ -107,4 +110,4 @@ const DeleteUserDialog = ({ id, isOpen, setIsOpen }: DeleteUserDialogProps) => {
   )
 }
 
-export default DeleteUserDialog
+export default DeleteDepartmentDialog

@@ -60,12 +60,13 @@ const AddingLeaveDaysDialog = ({ companyId }: AddingLeaveDaysDialogProps) => {
 
       setIsOpen(false)
 
-      router.refresh()
       setIsLoading(false)
 
       toast({
         description: result.message
       })
+
+      router.refresh()
 
       setIsLoading(false)
 
@@ -87,7 +88,7 @@ const AddingLeaveDaysDialog = ({ companyId }: AddingLeaveDaysDialogProps) => {
         onClick={() => setIsOpen(true)}
       >
         <p className="text-[#006A86] font-medium leading-6">
-          Set the number of leaves dates
+          Set the number of days for leave
         </p>
         <DialogSvg />
       </span>
@@ -99,6 +100,7 @@ const AddingLeaveDaysDialog = ({ companyId }: AddingLeaveDaysDialogProps) => {
             </DialogTitle>
             <DialogDescription className="border-[#CDDFE9] border-[0.5px] rounded-[18.8px] p-[18.2px] space-y-[18.2px]">
               <Input
+                disabled={isLoading}
                 placeholder="Add days number of leaves in the year"
                 onChange={(e) => setDays(e.target.value)}
                 value={days}
