@@ -1,4 +1,4 @@
-import { formatDateConverted } from "@/utils/helpers"
+import { formatDate } from "@/utils/helpers"
 import { IsLoadingType } from "@/utils/types"
 import { Status } from "@prisma/client"
 import { Button } from "../ui/button"
@@ -43,8 +43,8 @@ const LeaveRequest = ({
                 {name}
               </p>
               <span className="flex text-[12px] leading-4 font-medium">
-                <p>From: {formatDateConverted(startDate)}</p>-
-                <p>To: {formatDateConverted(endDate)}</p>
+                <p>From: {startDate ? formatDate(new Date(startDate)) : ""}</p>-
+                <p>To: {endDate ? formatDate(new Date(endDate)) : ""}</p>
               </span>
             </div>
           </div>

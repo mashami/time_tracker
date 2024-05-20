@@ -13,11 +13,7 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { cn } from "@/lib/utils"
-import {
-  findDaysBetweenDates,
-  formatDate,
-  formatDateConverted
-} from "@/utils/helpers"
+import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Announcement, Leave } from "@prisma/client"
 
 interface DashboardManagerWidgetPageProps {
@@ -142,14 +138,10 @@ const DashboardManagerWidgetPage = ({
                     <TableCell>{l.title}</TableCell>
 
                     <TableCell>
-                      {formatDateConverted(
-                        l.startDate ? formatDate(new Date(l.startDate)) : ""
-                      )}
+                      {l.startDate ? formatDate(new Date(l.startDate)) : ""}
                     </TableCell>
                     <TableCell>
-                      {formatDateConverted(
-                        l.endDate ? formatDate(new Date(l.endDate)) : ""
-                      )}
+                      {l.endDate ? formatDate(new Date(l.endDate)) : ""}
                     </TableCell>
                     <TableCell className="">
                       {l.status === "IsApproved" && (

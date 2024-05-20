@@ -106,7 +106,7 @@ const signinPage = () => {
           </span>
 
           <Button
-            className="text-white w-full"
+            className="text-white w-full py-5"
             text="Continue"
             style={{
               boxShadow: " 0px 4px 4px 0px rgba(217, 217, 217, 0.25) inset"

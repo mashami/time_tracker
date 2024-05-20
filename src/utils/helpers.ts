@@ -1,11 +1,3 @@
-export const formatDate = (date: Date) => {
-  if (!(date instanceof Date)) {
-    throw new Error("Invalid date. Argument must be of type Date.")
-  }
-  const formattedDate = date.toISOString().split("T")[0]
-  return formattedDate
-}
-
 export const findDaysBetweenDates = (
   startDateStr: string,
   endDateStr: string
@@ -42,35 +34,12 @@ export const isEmailValid = (email: string): boolean => {
   return emailRegex.test(email)
 }
 
-export const formatDateConverted = (inputDate: string) => {
-  // Parse the input date string
+export function formatDate(inputDate: string | number | Date) {
   const date = new Date(inputDate)
 
-  // Get month name
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-  ]
-  const month = monthNames[date.getMonth()]
-
-  // Get day of the month
-  const day = date.getDate()
-
-  // Get year
-  const year = date.getFullYear()
-
-  // Format the date
-  const formattedDate = `${month} ${day}, ${year}`
-
-  return formattedDate
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric"
+  })
 }

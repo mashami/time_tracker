@@ -8,7 +8,9 @@ import {
   registerType,
   SigninType,
   SignupType,
-  UpdateLeaveProps
+  UpdateDepartmentNameProps,
+  UpdateLeaveProps,
+  UpdateUserManagerProps
 } from "@/utils/types"
 
 export const logIn = async ({ email, password }: SigninType) => {
@@ -406,6 +408,64 @@ export const UpdateLeaveDays = async ({
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ days: leavesDays, companyId }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const getUsersByDepartment = async (departmentID: string) => {
+  const response = await fetch(`/api/get_users_by_department`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ departmentID }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const DeleteDepartment = async (departmentId: string) => {
+  const response = await fetch(`/api/delete_department`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ departmentId }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const updateDepartmentName = async ({
+  departmentId,
+  departmentName
+}: UpdateDepartmentNameProps) => {
+  const response = await fetch(`/api/update_department`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ departmentId, departmentName }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const updateUserManager = async ({
+  departmentId,
+  userId
+}: UpdateUserManagerProps) => {
+  const response = await fetch(`/api/make_user_manager`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ departmentId, userId }),
     cache: "no-store"
   })
 

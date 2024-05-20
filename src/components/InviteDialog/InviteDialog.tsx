@@ -171,6 +171,15 @@ const InviteDialog = ({
                 </div>
                 <div className="flex items-center w-full space-x-2">
                   <Button
+                    variant={"secondary"}
+                    className="text-black w-full"
+                    text="Cancel"
+                    onClick={() => {
+                      setIsOpen(false), setDepartmentId(""), setEmail("")
+                    }}
+                    disabled={isLoading}
+                  />
+                  <Button
                     className="text-white w-full"
                     text="Send Invite"
                     style={{
@@ -180,15 +189,6 @@ const InviteDialog = ({
                     onClick={onSubmitInviteFormHandler}
                     loading={isLoading}
                     disabled={isLoading || !email}
-                  />
-                  <Button
-                    variant={"secondary"}
-                    className="text-black w-full"
-                    text="Cancel"
-                    onClick={() => {
-                      setIsOpen(false), setDepartmentId(""), setEmail("")
-                    }}
-                    disabled={isLoading}
                   />
                 </div>
               </div>

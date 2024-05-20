@@ -18,7 +18,7 @@ const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
     throw new Error("User not found")
   }
 
-  const user = (await prisma.user.findUnique({
+  const user = (await prisma.user.findFirst({
     where: { id: sessionUser?.id },
     select: {
       id: true,
