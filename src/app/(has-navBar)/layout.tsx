@@ -1,7 +1,9 @@
 import { Menu } from "@/components/Menu"
 import { NavBar } from "@/components/NavBar"
+import { getAnnouncements } from "@/lib/actions"
 import { prisma } from "@/lib/prisma"
 import { getCurrentUser } from "@/lib/session"
+import { Role } from "@prisma/client"
 
 import React from "react"
 
@@ -46,6 +48,17 @@ const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
     }
   })
 
+  // const announcents = await prisma.announcement.findMany({
+  //   where: {
+  //     companyId,
+  //     departmentId: user.departmentId
+  //   }
+  // })
+  const role = user.role as Role
+  const departmentId = user.departmentId
+
+  const announcements = await getAnnouncements(role, companyId, departmentId)
+
   return (
     <main>
       <div
@@ -57,7 +70,11 @@ const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
         <Menu departments={departments} user={user} />
       </div>
       <div>
-        <NavBar user={user} departments={departments} />
+        <NavBar
+          user={user}
+          departments={departments}
+          annoucements={announcements}
+        />
       </div>
 
       <section className="max-w-[968px] ml-[333px] pt-[120px] pb-8 z-0 ">
