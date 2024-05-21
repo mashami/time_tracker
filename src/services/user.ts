@@ -179,8 +179,6 @@ export const getLeaves2 = async (companyId: string, nextPage: number) => {
     cache: "no-store"
   })
 
-  console.log(nextPage)
-
   const result = await response.json()
 
   return result
@@ -356,8 +354,6 @@ export const getCompanyDepartments2 = async ({
     body: JSON.stringify({ companyId }),
     cache: "no-store"
   })
-
-  console.log(companyId)
 
   const result = await response.json()
 

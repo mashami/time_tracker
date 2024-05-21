@@ -53,8 +53,6 @@ export const authOptions: NextAuthOptions = {
           const { password: _, ...restUser } = user
 
           if (!user) {
-            console.log("User doesn't found")
-
             return NextResponse.json(
               { error: true, message: "User doesn't found" },
               { status: HttpStatusCode.BAD_REQUEST }

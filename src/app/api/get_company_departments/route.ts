@@ -6,8 +6,6 @@ import { NextResponse } from "next/server"
 export async function POST(req: Request) {
   const user = await getCurrentUser()
 
-  console.log("User ==>", { user })
-
   if (!user?.companyId) {
     return NextResponse.json(
       { error: true, message: "Company ID and User ID are required" },
