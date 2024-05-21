@@ -14,8 +14,6 @@ interface NavbarPagesLayoutProps {
 const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
   const sessionUser = await getCurrentUser()
 
-  console.log(sessionUser)
-
   if (!sessionUser) {
     throw new Error("User not found")
   }

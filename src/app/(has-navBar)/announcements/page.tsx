@@ -23,8 +23,6 @@ const Announcementpage = async () => {
 
   const departmentId = departmentID?.departmentId as any
 
-  console.log("departmentId ===>", departmentId)
-
   const companyId = user.companyId
   const role = user.role as Role
 

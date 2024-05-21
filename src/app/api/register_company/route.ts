@@ -6,8 +6,6 @@ import { NextResponse } from "next/server"
 export async function POST(req: Request) {
   const { name, email, password, retypedPassword } = await req.json()
 
-  console.log("Heeeee")
-
   // Check if all fields are sent from client
   if (!name || !email || !password || !retypedPassword) {
     return NextResponse.json(

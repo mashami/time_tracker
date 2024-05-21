@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import { Announcement } from "@prisma/client"
+
+import { useState } from "react"
 import { NotificationSvg } from "../Svg"
 import Notification from "./Notification"
 
@@ -16,16 +18,19 @@ interface NotificationDropdownProp {
 }
 
 const NotificationDropdown = ({ annoucements }: NotificationDropdownProp) => {
+  const [isOpen, setIsOpen] = useState<boolean>(false)
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger className="outline-none ring-0 ring-offset-0 border-none">
-          <div className="w-10 h-10 bg-[#F9F9FA] rounded-full flex items-center justify-center">
-            <NotificationSvg />
-          </div>
-        </DropdownMenuTrigger>
+      <div
+        className="w-10 h-10 bg-[#F9F9FA] rounded-full flex items-center justify-center"
+        onClick={() => setIsOpen(true)}
+      >
+        <NotificationSvg />
+      </div>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenuTrigger className="outline-none ring-0 ring-offset-0 border-none"></DropdownMenuTrigger>
         <DropdownMenuContent
-          sideOffset={12}
+          sideOffset={32}
           className="w-[500px] bg-white rounded-[10px] p-6 space-y-4 mr-4 border border-[#CDDFE9]"
         >
           <div className="flex items-center justify-between">
@@ -37,7 +42,7 @@ const NotificationDropdown = ({ annoucements }: NotificationDropdownProp) => {
             </p>
           </div>
           {annoucements.map((a) => (
-            <DropdownMenuItem key={a.id}>
+            <DropdownMenuItem key={a.id} onClick={() => setIsOpen(false)}>
               <Notification
                 createAt={a.createdAt}
                 description={a.description}

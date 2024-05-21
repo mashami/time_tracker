@@ -61,8 +61,6 @@ const InviteDialog = ({
 
     setIsLoading(true)
 
-    console.log(departmentIdInvite)
-
     try {
       const result = await inviteUser({
         departmentId: departmentIdInvite,

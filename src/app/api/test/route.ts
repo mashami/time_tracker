@@ -60,8 +60,6 @@ export async function POST(req: Request) {
       }
     })
 
-    console.log(isUserHaveLeavePending)
-
     if (isUserHaveLeavePending !== null) {
       return NextResponse.json(
         {

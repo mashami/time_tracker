@@ -100,14 +100,7 @@ export async function POST(req: Request) {
 
     const totalRequestedDays = findDaysBetweenDates(startDate, endDate)
 
-    console.log(" totalRequestedDays ===>", totalRequestedDays)
-    console.log("Type ====>", typeof totalRequestedDays)
-
     const totalLeave = user.companyLeaves
-
-    console.log(totalLeave)
-
-    console.log("Type ===>", typeof totalLeave)
 
     const remainingLeave = user.remainingLeave
 

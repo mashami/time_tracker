@@ -22,8 +22,6 @@ const AddDepartmentDialog = ({ companyId }: AddDepartmentDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [name, setName] = useState<string>("")
 
-  console.log(companyId)
-
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
