@@ -3,14 +3,12 @@ import { HomePageDescription } from "@/components/HomePageDescription"
 import {
   AlarmSvg,
   AlarmUserSvg,
-  AnimationLineDownSvg,
-  AnimationLineUpSvg,
   ArrowRighSvg,
   ClockUserSvg
 } from "@/components/Svg"
 import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-
 // command to remove nodemodules:  rm -rf node_modules .next yarn.lock
 export default function HomePage() {
   const router = useRouter()
@@ -53,9 +51,27 @@ export default function HomePage() {
             onClick={() => router.push("/signup")}
           />
 
-          <span className="absolute bottom-2 left-40">
-            <AnimationLineUpSvg />
-          </span>
+          <motion.svg
+            width={69}
+            height={98}
+            viewBox="0 0 69 98"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="absolute bottom-2 left-40"
+          >
+            <motion.path
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{
+                duration: 1.25,
+                ease: "easeInOut"
+              }}
+              d="M46.03 2C42.53 3.16667 35.63 9.7 36.03 26.5C36.53 47.5 44.03 50.5 46.53 50.5C49.03 50.5 54.03 43.5 34.03 30C14.03 16.5 -1 26.5 2.02998 42C5.00986 57.2437 25.03 82 66.53 88.5M66.53 88.5L59.0302 76.5M66.53 88.5L52.5302 96.5"
+              stroke="#006A86"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+          </motion.svg>
         </div>
         <div className="grid grid-cols-3 gap-9 relative">
           <HomePageDescription
@@ -76,9 +92,41 @@ export default function HomePage() {
           />
         </div>
       </div>
-      <span className="absolute bottom-0 left-0">
-        <AnimationLineDownSvg />
-      </span>
+
+      <motion.svg
+        width={577}
+        height={333}
+        viewBox="0 0 577 333"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="absolute bottom-0 left-0"
+      >
+        <motion.path
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{
+            duration: 1.25,
+            ease: "easeInOut"
+          }}
+          d="M0 3C100.339 90.0591 278.294 275.392 187.398 320.249C73.7789 376.321 -94.437 160.887 574 225.812"
+          stroke="url(#paint0_linear_141_4588)"
+          strokeWidth={6}
+          strokeLinecap="round"
+        />
+        <defs>
+          <linearGradient
+            id="paint0_linear_141_4588"
+            x1={287}
+            y1="132.5"
+            x2={287}
+            y2="329.665"
+            gradientUnits="userSpaceOnUse"
+          >
+            <stop stopColor="#8E38FF" />
+            <stop offset={1} stopColor="#992B87" />
+          </linearGradient>
+        </defs>
+      </motion.svg>
     </main>
   )
 }
