@@ -1,5 +1,6 @@
 import { Toaster } from "@/components/ui/toaster"
 import { cn } from "@/lib/utils"
+import "@/styles/globals.scss"
 import { AppContextProvider } from "@/utils/context/AppContext"
 import type { Metadata } from "next"
 import {
@@ -8,7 +9,6 @@ import {
   Inter,
   Lexend_Deca
 } from "next/font/google"
-import "../styles/globals.scss"
 
 const inter = Inter({ subsets: ["latin"] })
 
