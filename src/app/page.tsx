@@ -74,22 +74,43 @@ export default function HomePage() {
           </motion.svg>
         </div>
         <div className="grid grid-cols-3 gap-9 relative">
-          <HomePageDescription
-            svg={<AlarmSvg />}
-            header="Request for leave"
-            description="Enter your basic details including name, and position. Choose the type of leave you need – be it annual, sick, or any other category."
-          />
+          <motion.div
+            initial={{ x: "222%" }}
+            whileInView={{ x: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            viewport={{ once: true }}
+          >
+            <HomePageDescription
+              svg={<AlarmSvg />}
+              header="Request for leave"
+              description="Enter your basic details including name, and position. Choose the type of leave you need – be it annual, sick, or any other category."
+            />
+          </motion.div>
 
-          <HomePageDescription
-            svg={<ClockUserSvg />}
-            header="Track your Shift"
-            description="With our convenient shift tracking feature. Input your schedule details, including shift start and end times, as well as any breaks or overtime."
-          />
-          <HomePageDescription
-            svg={<AlarmUserSvg />}
-            header="Check your Break time"
-            description="Take control of your break time with our handy break tracking feature. Simply log your break start and end times."
-          />
+          <motion.div
+            initial={{ x: "113%" }}
+            whileInView={{ x: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            viewport={{ once: true }}
+          >
+            <HomePageDescription
+              svg={<ClockUserSvg />}
+              header="Track your Shift"
+              description="With our convenient shift tracking feature. Input your schedule details, including shift start and end times, as well as any breaks or overtime."
+            />
+          </motion.div>
+          <motion.div
+            initial={{ x: "1%" }}
+            whileInView={{ x: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            viewport={{ once: true }}
+          >
+            <HomePageDescription
+              svg={<AlarmUserSvg />}
+              header="Check your Break time"
+              description="Take control of your break time with our handy break tracking feature. Simply log your break start and end times."
+            />
+          </motion.div>
         </div>
       </div>
 
