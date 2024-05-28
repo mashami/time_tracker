@@ -40,7 +40,7 @@ const signinPage = () => {
       if (result?.error) {
         toast({
           variant: "destructive",
-          description: result.error
+          description: "User with this email doesn't found"
         })
 
         setIsLoading(false)
