@@ -1,13 +1,11 @@
-import { HttpStatusCode } from "@/utils/enums"
 import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { User } from "@prisma/client"
 import { compare } from "bcryptjs"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { NextResponse } from "next/server"
 import { prisma } from "./prisma"
 
-// type Awaitable<T> = T | Promise<T>;
+type Awaitable<T> = T | Promise<T>
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -25,42 +23,25 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!email || !password) {
-          return NextResponse.json(
-            { error: true, message: "All fields are required" },
-            { status: HttpStatusCode.BAD_REQUEST }
-          )
+          throw new Error("All fields are required")
         }
         try {
           const user = await prisma.user.findFirst({
             where: { email }
           })
 
+          console.log("User ---->", { user })
+
           if (!user) {
-            console.log("Heeee")
-            return NextResponse.json(
-              { error: true, message: "User with email does not exists." },
-              { status: HttpStatusCode.BAD_REQUEST }
-            )
+            return null
           }
 
-          const comparePasswords = await compare(password, user.password)
+          const isValidPassword = await compare(password, user.password)
 
-          if (!comparePasswords) {
-            return NextResponse.json(
-              { error: true, message: "Incorrect password." },
-              { status: HttpStatusCode.BAD_REQUEST }
-            )
+          if (!isValidPassword) {
+            return null
           }
           const { password: _, ...restUser } = user
-
-          if (!user) {
-            console.log("Heeee")
-
-            return NextResponse.json(
-              { error: true, message: "User doesn't found" },
-              { status: HttpStatusCode.BAD_REQUEST }
-            )
-          }
 
           return {
             id: user.id,
@@ -70,11 +51,7 @@ export const authOptions: NextAuthOptions = {
             companyId: user.companyId
           } as User | any
         } catch (error) {
-          console.log(error)
-          return NextResponse.json(
-            { error: true, message: "An error occured. Please try again." },
-            { status: HttpStatusCode.INTERNAL_SERVER }
-          )
+          throw new Error("An error occurred. Please try again.")
         }
 
         // const data = await logIn({ email, password })
@@ -120,6 +97,8 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user }) {
+      // console.log("User ---->", { user })
+
       if (user) {
         return {
           ...token,
