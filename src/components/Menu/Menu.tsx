@@ -173,12 +173,15 @@ const SideMenu = ({ departments, user }: SideMenuProps) => {
               </p>
             </div>
             <div
-              className="w-[40px] h-[40px] cursor-pointer rounded-full bg-[#F9F9FA] hover:bg-[#F9F9FA]/60 flex items-center justify-center text-white uppercase"
+              className="relative group w-[40px] h-[40px] cursor-pointer rounded-full bg-[#F9F9FA] hover:bg-[#F9F9FA]/60 flex items-center justify-center"
               onClick={() => {
                 // resetUser()
                 signOut({ callbackUrl: "/signin" })
               }}
             >
+              <p className="hidden group-hover:flex absolute -top-6 text-[10px] text-black py-2">
+                Log out
+              </p>
               <LogOutSvg />
             </div>
           </div>

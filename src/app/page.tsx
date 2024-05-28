@@ -75,10 +75,11 @@ export default function HomePage() {
         </div>
         <div className="grid grid-cols-3 gap-9 relative">
           <motion.div
-            initial={{ x: "222%" }}
+            initial={{ x: "222%"}}
             whileInView={{ x: 0 }}
             transition={{ duration: 1, ease: "easeInOut" }}
             viewport={{ once: true }}
+            
           >
             <HomePageDescription
               svg={<AlarmSvg />}
@@ -88,10 +89,11 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            initial={{ x: "113%" }}
+            initial={{ x: "111%" }}
             whileInView={{ x: 0 }}
             transition={{ duration: 1, ease: "easeInOut" }}
             viewport={{ once: true }}
+            
           >
             <HomePageDescription
               svg={<ClockUserSvg />}

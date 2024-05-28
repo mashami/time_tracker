@@ -1,5 +1,6 @@
 "use client"
 
+import { daysAgo } from "@/utils/helpers"
 import Link from "next/link"
 
 interface NotificationProps {
@@ -9,6 +10,8 @@ interface NotificationProps {
 }
 
 const Notification = ({ owner, description, createAt }: NotificationProps) => {
+  const daysgo = daysAgo(createAt)
+
   return (
     <Link
       href={"/announcements"}
@@ -24,7 +27,7 @@ const Notification = ({ owner, description, createAt }: NotificationProps) => {
               <p className="text-black flex flex-1 flex-shrink-0">{owner}</p>
               <p className="text-[#5F6368]">Attention</p>
             </div>
-            <div className="flex items-end">
+            <div className="flex flex-wrap items-end">
               <p className="text-[14px] leading-5 font-medium text-[#5F6368] line-clamp-3">
                 {description}
               </p>
@@ -34,7 +37,7 @@ const Notification = ({ owner, description, createAt }: NotificationProps) => {
         </div>
       </div>
       <p className="text-[14px] leading-[21px] text-black font-medium flex flex-shrink-0">
-        7min ago
+        {daysgo} days ago
       </p>
     </Link>
   )

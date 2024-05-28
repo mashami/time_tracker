@@ -3,7 +3,7 @@
 import { AnnouncementCop } from "@/components/Announcement"
 import { AnnouncementDialog } from "@/components/AnnouncementDialog"
 import { Announcement, Role } from "@prisma/client"
-
+import { motion } from "framer-motion"
 interface AnnouncementsWidgetProps {
   announcements: Announcement[]
   departmentID?: string | null
@@ -18,7 +18,12 @@ const AnnouncementsWidget = ({
   const announcementLength = announcements.length
 
   return (
-    <section className="mx-[85.5px] p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <motion.section
+      initial={{ y: "-10%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="mx-[85.5px] p-6 bg-[#F9F9F9] rounded-[32px] space-y-8"
+    >
       <div className="flex items-center justify-between">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Announcements
@@ -50,7 +55,7 @@ const AnnouncementsWidget = ({
           )}
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
