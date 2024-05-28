@@ -43,3 +43,16 @@ export function formatDate(inputDate: string | number | Date) {
     day: "numeric"
   })
 }
+
+export function daysAgo(inputDate: Date) {
+  const now = new Date() as any
+  const pastDate = new Date(inputDate) as any
+
+  // Calculate the difference in milliseconds
+  const diffInMs = now - pastDate
+
+  // Convert milliseconds to days
+  const diffInDays = Math.floor(diffInMs / 1000 / 60 / 60 / 24)
+
+  return diffInDays
+}

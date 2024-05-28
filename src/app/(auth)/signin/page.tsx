@@ -35,6 +35,8 @@ const signinPage = () => {
         redirect: false
       })
 
+      console.log("Result ==>", { result })
+
       if (result?.error) {
         toast({
           variant: "destructive",

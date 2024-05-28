@@ -10,7 +10,6 @@ const Description = ({ description, header, svg }: DescriptionProps) => {
     <motion.div
       whileHover={{ scale: 1.1 }}
       transition={{
-        delay: 0,
         duration: 0.35,
         ease: "easeInOut"
       }}

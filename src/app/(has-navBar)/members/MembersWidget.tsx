@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils"
 import { deleteUser } from "@/services/user"
 import { formatDate } from "@/utils/helpers"
 import { User } from "@prisma/client"
+import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
@@ -103,7 +104,12 @@ const MembersWidget = ({
 
   return (
     <>
-      <section className="w-full p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+      <motion.section
+        initial={{ y: "-10%", opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        className="w-full p-6 bg-[#F9F9F9] rounded-[32px] space-y-8"
+      >
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Members
         </h1>
@@ -235,7 +241,7 @@ const MembersWidget = ({
             <p>No Users yet</p>
           )}
         </div>
-      </section>
+      </motion.section>
       <DeleteUserDialog isOpen={isOpen} setIsOpen={setIsOpen} id={id} />
     </>
   )

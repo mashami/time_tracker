@@ -1,16 +1,16 @@
 import { HttpStatusCode } from "@/utils/enums"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { User } from "@prisma/client"
+import { compare } from "bcryptjs"
 import type { NextAuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { NextResponse } from "next/server"
 import { prisma } from "./prisma"
 
-import { User } from "@prisma/client"
-import { compare } from "bcryptjs"
-
 // type Awaitable<T> = T | Promise<T>;
 
 export const authOptions: NextAuthOptions = {
-  // adapter: PrismaAdapter(prisma),
+  adapter: PrismaAdapter(prisma),
 
   providers: [
     CredentialsProvider({
@@ -36,6 +36,7 @@ export const authOptions: NextAuthOptions = {
           })
 
           if (!user) {
+            console.log("Heeee")
             return NextResponse.json(
               { error: true, message: "User with email does not exists." },
               { status: HttpStatusCode.BAD_REQUEST }
@@ -53,6 +54,8 @@ export const authOptions: NextAuthOptions = {
           const { password: _, ...restUser } = user
 
           if (!user) {
+            console.log("Heeee")
+
             return NextResponse.json(
               { error: true, message: "User doesn't found" },
               { status: HttpStatusCode.BAD_REQUEST }

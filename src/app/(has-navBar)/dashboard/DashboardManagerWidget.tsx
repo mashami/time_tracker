@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { Announcement, Leave } from "@prisma/client"
-
+import { motion } from "framer-motion"
 interface DashboardManagerWidgetPageProps {
   leaves: Leave[]
   announcements: Announcement[]
@@ -40,7 +40,12 @@ const DashboardManagerWidgetPage = ({
   }
 
   return (
-    <section className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <motion.section
+      initial={{ y: "-10%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8"
+    >
       <div className="flex items-center justify-between">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Dashboard
@@ -225,7 +230,7 @@ const DashboardManagerWidgetPage = ({
           <p>No Leave yet</p>
         )}
       </div>
-    </section>
+    </motion.section>
   )
 }
 

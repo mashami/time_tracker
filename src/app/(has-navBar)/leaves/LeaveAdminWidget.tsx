@@ -19,9 +19,9 @@ import { changeLeave, getLeaves2 } from "@/services/user"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { IsLoadingType } from "@/utils/types"
 import { Leave, Status } from "@prisma/client"
+import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-
 interface LeaveAdminWidgetProps {
   leaves: Leave[]
   companyId: string
@@ -181,7 +181,12 @@ const LeaveAdminWidget = ({
   }
 
   return (
-    <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
+    <motion.section
+      initial={{ y: "-10%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8"
+    >
       <div className="flex items-center ">
         <h1 className="font-medium leading-5 text-[24px] font-ibm_plex_mono">
           Leave
@@ -389,7 +394,7 @@ const LeaveAdminWidget = ({
           )}
         </div>
       </div>
-    </div>
+    </motion.section>
   )
 }
 

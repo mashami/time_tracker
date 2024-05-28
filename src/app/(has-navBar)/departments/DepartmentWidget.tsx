@@ -19,9 +19,9 @@ import { cn } from "@/lib/utils"
 import { getUsersByDepartment } from "@/services/user"
 import { formatDate } from "@/utils/helpers"
 import { Department, User } from "@prisma/client"
+import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
 interface DepartmentProps {
   companyId: string
   departments: Department[]
@@ -74,7 +74,12 @@ const DepartmentsWidget = ({ companyId, departments }: DepartmentProps) => {
   }
 
   return (
-    <section className="mx-[85.5px] space-y-10">
+    <motion.section
+      initial={{ y: "-10%", opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: "easeInOut" }}
+      className="mx-[85.5px] space-y-10"
+    >
       {!isLoading && !isDepartmentOpen && (
         <div className="p-6 bg-[#F9F9F9] rounded-[32px] space-y-8">
           <div className="flex items-center justify-between">
@@ -197,7 +202,7 @@ const DepartmentsWidget = ({ companyId, departments }: DepartmentProps) => {
           <Loader />
         </div>
       )}
-    </section>
+    </motion.section>
   )
 }
 

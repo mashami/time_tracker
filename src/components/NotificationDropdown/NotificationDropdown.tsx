@@ -28,10 +28,10 @@ const NotificationDropdown = ({ annoucements }: NotificationDropdownProp) => {
         <NotificationSvg />
       </div>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-        <DropdownMenuTrigger className="outline-none ring-0 ring-offset-0 border-none"></DropdownMenuTrigger>
+        <DropdownMenuTrigger className=" outline-none ring-0 ring-offset-0 border-none"></DropdownMenuTrigger>
         <DropdownMenuContent
           sideOffset={32}
-          className="w-[500px] bg-white rounded-[10px] p-6 space-y-4 mr-4 border border-[#CDDFE9]"
+          className="w-[500px] max-h-[350px] overflow-y-auto bg-white rounded-[10px] p-6 space-y-4 mr-4 border border-[#CDDFE9]"
         >
           <div className="flex items-center justify-between">
             <p className="font-ibm_plex_mono font-medium leading-6">
