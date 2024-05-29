@@ -43,7 +43,8 @@ export const getAnnouncements = async (
     })
   } else {
     announcement = await prisma.announcement.findMany({
-      where: { companyId, departmentId, belong: "all" }
+      where: { companyId, departmentId, belong: "all" },
+      orderBy: { createdAt: "desc" }
     })
   }
 

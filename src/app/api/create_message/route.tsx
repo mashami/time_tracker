@@ -1,16 +1,18 @@
 import { prisma } from "@/lib/prisma"
+import { pusherServer } from "@/lib/pusher"
 import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
 
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const { owner, description, departmentId, audience } = await req.json()
+  const { message, departmentId } = await req.json()
 
   const user = await getCurrentUser()
   const companyId = user?.companyId
+  const owner = user?.name
 
-  if (!owner || !audience || !description) {
+  if (!owner || !departmentId || !message) {
     return NextResponse.json(
       { error: true, message: "All fields are required" },
       { status: HttpStatusCode.BAD_REQUEST }
@@ -39,41 +41,14 @@ export async function POST(req: Request) {
       )
     }
 
-    console.log({ departmentId })
+    pusherServer.trigger(departmentId, "incoming-message", { message, owner })
 
-    if (departmentId) {
-      const result = await prisma.announcement.create({
-        data: {
-          description,
-          owner,
-          belong: audience,
-          companyId,
-          departmentId
-        }
-      })
-
-      if (!result) {
-        return NextResponse.json(
-          {
-            error: true,
-            message: "Announcement failed to add. Please try again"
-          },
-          { status: HttpStatusCode.BAD_REQUEST }
-        )
-      }
-
-      return NextResponse.json(
-        { message: "Announcement added 1 sucessfully" },
-        { status: HttpStatusCode.OK }
-      )
-    }
-
-    const result = await prisma.announcement.create({
+    const result = await prisma.message.create({
       data: {
-        description,
         owner,
-        belong: audience,
-        companyId
+        companyId,
+        text: message,
+        departmentId
       }
     })
 
@@ -81,14 +56,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         {
           error: true,
-          message: "Announcement failed to add. Please try again"
+          message: "Fail to send Message, Please try again"
         },
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }
 
     return NextResponse.json(
-      { message: "Announcement added sucessfully" },
+      { message: "Message send successFull" },
       { status: HttpStatusCode.OK }
     )
   } catch (error) {

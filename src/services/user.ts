@@ -5,6 +5,7 @@ import {
   getLeavesByUserTypes,
   invitationType,
   LeaveType,
+  MessageTypes,
   registerType,
   SigninType,
   SignupType,
@@ -275,6 +276,25 @@ export const createAnnouncement = async ({
       description,
       departmentId,
       audience
+    }),
+    cache: "no-store"
+  })
+
+  const result = await response.json()
+
+  return result
+}
+
+export const createMessage = async ({
+  departmentId,
+  message
+}: MessageTypes) => {
+  const response = await fetch(`/api/create_message`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message,
+      departmentId
     }),
     cache: "no-store"
   })
