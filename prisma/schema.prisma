@@ -21,6 +21,7 @@ model Company {
   users         User[]
   departments   Department[]
   Leave         Leave[]
+  messages      Message[]
 }
 
 model Department {
@@ -37,6 +38,7 @@ model Department {
   leaves       Leave[]
   invitations  Invitation[]
   announcement Announcement[]
+  messages     Message[]
 
   @@index([companyId, name])
 }
@@ -118,6 +120,21 @@ model Announcement {
   departmentId String?     @db.ObjectId
 
   @@index([companyId])
+}
+
+model Message {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  owner     String
+  text      String
+  companyId String?  @db.ObjectId
+
+  Company      Company?    @relation(fields: [companyId], references: [id])
+  Department   Department? @relation(fields: [departmentId], references: [id])
+  departmentId String?     @db.ObjectId
+
+  @@index([departmentId])
 }
 
 enum Role {

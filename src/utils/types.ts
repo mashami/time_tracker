@@ -69,6 +69,11 @@ export interface AnnouncementTypes {
   audience: BelongType
 }
 
+export interface MessageTypes {
+  message: string
+  departmentId?: string
+}
+
 export interface DepartmentTypes {
   companyId: string
   name?: string

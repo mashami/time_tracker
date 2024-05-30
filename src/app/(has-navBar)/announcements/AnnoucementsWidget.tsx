@@ -2,8 +2,10 @@
 
 import { AnnouncementCop } from "@/components/Announcement"
 import { AnnouncementDialog } from "@/components/AnnouncementDialog"
+import { pusherClient } from "@/lib/pusher"
 import { Announcement, Role } from "@prisma/client"
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
 interface AnnouncementsWidgetProps {
   announcements: Announcement[]
   departmentID?: string | null
@@ -15,6 +17,24 @@ const AnnouncementsWidget = ({
   departmentID,
   role
 }: AnnouncementsWidgetProps) => {
+  const [oncomingAnnoucement, setOncomingAnnoucement] = useState<
+    Announcement[]
+  >([])
+
+  useEffect(() => {
+    const handleIncomingAnnoucement = (Annoucement: Announcement) => {
+      setOncomingAnnoucement((prev) => [...prev, Annoucement])
+    }
+
+    pusherClient.subscribe(departmentID || "")
+    pusherClient.bind("incoming-annoucement", handleIncomingAnnoucement)
+
+    return () => {
+      pusherClient.unbind("incoming-annoucement", handleIncomingAnnoucement)
+      pusherClient.unsubscribe(departmentID || "")
+    }
+  }, [departmentID])
+
   const announcementLength = announcements.length
 
   return (
@@ -37,6 +57,17 @@ const AnnouncementsWidget = ({
           All {announcementLength}
         </h2>
         <div className="space-y-6">
+          {oncomingAnnoucement.map((ann) => (
+            <AnnouncementCop
+              key={ann.id}
+              id={ann.id}
+              date={ann.updatedAt}
+              description={ann.description}
+              owner={ann.owner}
+              role={role}
+            />
+          ))}
+
           {announcements.length > 0 ? (
             announcements.map((ann) => (
               <AnnouncementCop

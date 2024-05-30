@@ -119,6 +119,20 @@ const SideMenu = ({ departments, user }: SideMenuProps) => {
                 Leave
               </p>
             </Link>
+            {user.role !== "Admin" && (
+              <Link
+                href={`/messages/${user.departmentId}`}
+                className={cn(
+                  path.includes("/messages") && "bg-[#F9F9F9]",
+                  "p-[10px] flex items-center space-x-[10px] hover:bg-[#F9F9F9] cursor-pointer rounded-md"
+                )}
+              >
+                <LeaveSvg />
+                <p className="text-[#667085] text-[14px] font-semibold leading-5 cursor-pointer rounded-md">
+                  Chats
+                </p>
+              </Link>
+            )}
 
             <div className="p-[10px] flex items-center justify-between rounded-md ">
               <div className="flex items-center space-x-[10px]">

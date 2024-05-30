@@ -30,8 +30,6 @@ export const authOptions: NextAuthOptions = {
             where: { email }
           })
 
-          console.log("User ---->", { user })
-
           if (!user) {
             return null
           }

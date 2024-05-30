@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { pusherServer } from "@/lib/pusher"
 import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
 
@@ -60,28 +61,39 @@ export async function POST(req: Request) {
         )
       }
 
+      pusherServer.trigger(departmentId, "incoming-annoucement", result)
+
       return NextResponse.json(
         { message: "Announcement added sucessfully" },
         { status: HttpStatusCode.OK }
       )
     }
 
-    const result = await prisma.announcement.create({
-      data: {
-        description,
-        owner,
-        belong: audience,
-        companyId
-      }
-    })
+    if (user.role === "Admin") {
+      const result = await prisma.announcement.create({
+        data: {
+          description,
+          owner,
+          belong: audience,
+          companyId
+        }
+      })
 
-    if (!result) {
+      if (!result) {
+        return NextResponse.json(
+          {
+            error: true,
+            message: "Announcement failed to add. Please try again"
+          },
+          { status: HttpStatusCode.BAD_REQUEST }
+        )
+      }
+
+      pusherServer.trigger(departmentId, "incoming-annoucement", result)
+
       return NextResponse.json(
-        {
-          error: true,
-          message: "Announcement failed to add. Please try again"
-        },
-        { status: HttpStatusCode.BAD_REQUEST }
+        { message: "Announcement added sucessfully" },
+        { status: HttpStatusCode.OK }
       )
     }
 
