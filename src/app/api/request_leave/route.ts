@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma"
+import { pusherServer } from "@/lib/pusher"
 import { getCurrentUser } from "@/lib/session"
 import { HttpStatusCode } from "@/utils/enums"
 import { findDaysBetweenDates } from "@/utils/helpers"
@@ -145,6 +146,8 @@ export async function POST(req: Request) {
         { status: HttpStatusCode.BAD_REQUEST }
       )
     }
+
+    pusherServer.trigger(departmentId, "incoming-leave", leave)
 
     return NextResponse.json(
       {

@@ -14,13 +14,14 @@ import {
 import { cn } from "@/lib/utils"
 
 import { toast } from "@/components/ui/use-toast"
+import { pusherClient } from "@/lib/pusher"
 import { changeLeave } from "@/services/user"
 import { findDaysBetweenDates, formatDate } from "@/utils/helpers"
 import { IsLoadingType } from "@/utils/types"
 import { Leave, Status } from "@prisma/client"
 import { motion } from "framer-motion"
 import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 interface LeaveManagerWidgetProps {
   leaves: Leave[]
@@ -38,6 +39,22 @@ const LeaveManagerWidget = ({
     isLoadingIsProv: false,
     isLoadingIsRej: false
   })
+
+  const [oncomingLeave, setOncomingLeave] = useState<Leave[]>([])
+
+  useEffect(() => {
+    const handleIncomingLeave = (leave: Leave) => {
+      setOncomingLeave((prev) => [...prev, leave])
+    }
+
+    pusherClient.subscribe(departmentId || "")
+    pusherClient.bind("incoming-leave", handleIncomingLeave)
+
+    return () => {
+      pusherClient.unbind("incoming-leave", handleIncomingLeave)
+      pusherClient.unsubscribe(departmentId || "")
+    }
+  }, [departmentId])
 
   const router = useRouter()
 
@@ -214,6 +231,28 @@ const LeaveManagerWidget = ({
               No Leaves which is in pending mode
             </p>
           )}
+
+          {oncomingLeave.map((l, i) => (
+            <div key={l.id} className="max-h-[426px] overflow-y-scroll">
+              <div className="p-[10px] space-y-6 h-full">
+                <LeaveRequest
+                  isLoading={isLoading}
+                  onClick={changeLeaveStatusHandler}
+                  departmentName={l.departmentName}
+                  id={l.id}
+                  description={l.description}
+                  endDate={l.updatedAt ? formatDate(new Date(l.updatedAt)) : ""}
+                  name={l.name}
+                  startDate={
+                    l.startDate ? formatDate(new Date(l.startDate)) : ""
+                  }
+                />
+                {i !== leavesPending.length - 1 && (
+                  <div className="w-full h-[0.5px] border-[0.5px] border-[#CDDFE9]"></div>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

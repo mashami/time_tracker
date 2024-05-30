@@ -14,7 +14,6 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { requestLeave } from "@/services/user"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { CaretRightSvg } from "../Svg"
 import { Button } from "../ui/button"
@@ -34,7 +33,7 @@ const RequestLeaveDialog = ({ departmentId }: AnnouncementDialogProps) => {
   const [description, setDescription] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const router = useRouter()
+  // const router = useRouter()
 
   const typesLeave = [
     { label: "Annual Leave (AL)", value: "Annual Leave" },
@@ -74,14 +73,16 @@ const RequestLeaveDialog = ({ departmentId }: AnnouncementDialogProps) => {
 
         setIsOpen(false)
 
-        return toast({
+        toast({
           variant: "destructive",
           description: result.message
         })
+        setIsLoading(false)
+        return
       }
 
       if (result.OK) {
-        router.refresh()
+        // router.refresh()
         toast({
           description: result.message
         })
@@ -94,7 +95,8 @@ const RequestLeaveDialog = ({ departmentId }: AnnouncementDialogProps) => {
 
       setIsOpen(false)
 
-      router.refresh()
+      // router.refresh()
+
       setIsLoading(false)
 
       return toast({

@@ -22,7 +22,7 @@ const NotificationDropdown = ({ annoucements }: NotificationDropdownProp) => {
   return (
     <>
       <div
-        className="w-10 h-10 bg-[#F9F9FA] rounded-full flex items-center justify-center"
+        className="w-10 h-10 bg-[#F9F9FA] rounded-full flex items-center justify-center cursor-pointer"
         onClick={() => setIsOpen(true)}
       >
         <NotificationSvg />

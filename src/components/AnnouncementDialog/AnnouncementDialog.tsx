@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/dialog"
 import { createAnnouncement } from "@/services/user"
 import { BelongType, Role } from "@prisma/client"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
@@ -30,8 +29,6 @@ const AnnouncementDialog = ({
   const [description, setDescription] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [audience, setAudience] = useState<BelongType>("all")
-
-  const router = useRouter()
 
   const onClickHandler = async () => {
     if (!description || !owner) {
@@ -72,7 +69,6 @@ const AnnouncementDialog = ({
       setOwner("")
       setIsOpen(false)
 
-      router.refresh()
       setIsLoading(false)
 
       toast({
