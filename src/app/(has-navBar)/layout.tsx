@@ -26,6 +26,7 @@ const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
       name: true,
       role: true,
       departmentId: true,
+      email: true,
       Company: {
         select: {
           name: true
@@ -75,7 +76,7 @@ const NavbarPagesLayout = async ({ children }: NavbarPagesLayoutProps) => {
         />
       </div>
 
-      <section className="max-w-[968px] ml-[333px] pt-[120px] pb-8 z-0 ">
+      <section className="max-w-[968px] md:ml-[333px] 2xl:ml-auto mx-auto  pt-[120px] pb-8 z-0">
         {children}
       </section>
     </main>

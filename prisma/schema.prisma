@@ -22,6 +22,7 @@ model Company {
   departments   Department[]
   Leave         Leave[]
   messages      Message[]
+  Payment       Payment[]
 }
 
 model Department {
@@ -135,6 +136,17 @@ model Message {
   departmentId String?     @db.ObjectId
 
   @@index([departmentId])
+}
+
+model Payment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  companyId   String?  @db.ObjectId
+  paymentId   String
+  Name        String
+  CompanyName String
+  Company     Company? @relation(fields: [companyId], references: [id])
+
+  @@index([companyId])
 }
 
 enum Role {

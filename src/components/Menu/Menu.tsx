@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { InviteDialog } from "../InviteDialog"
 
+import { PaymentDialog } from "../PaymentDialog"
 import {
   AnnouncementSvg,
   ArrowRighSvg,
@@ -21,7 +22,10 @@ import {
 
 interface SideMenuProps {
   departments: Department[]
-  user: Pick<User, "id" | "companyId" | "name" | "role" | "departmentId"> & {
+  user: Pick<
+    User,
+    "id" | "companyId" | "name" | "role" | "departmentId" | "email"
+  > & {
     Company: {
       name: string
     }
@@ -30,6 +34,7 @@ interface SideMenuProps {
 
 const SideMenu = ({ departments, user }: SideMenuProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isPaymentOpen, setIsPaymentOpen] = useState<boolean>(false)
 
   const path = usePathname()
 
@@ -164,11 +169,25 @@ const SideMenu = ({ departments, user }: SideMenuProps) => {
             {user.role === "Admin" && (
               <div className="pt-[79px]">
                 <div
-                  className="p-[10px] flex items-center  space-x-[10px] bg-[#F9F9F9] cursor-pointer rounded-md"
+                  className="p-[10px] flex items-center justify-between bg-[#F9F9F9] cursor-pointer rounded-md"
                   onClick={() => setIsOpen(true)}
                 >
                   <p className="text-black text-[14px] font-medium leading-5 cursor-pointer rounded-md">
                     Invite Staff
+                  </p>
+                  <ArrowRighSvg color="black" />
+                </div>
+              </div>
+            )}
+
+            {user.role === "Admin" && (
+              <div className="pt-[0px]">
+                <div
+                  className="p-[10px] flex items-center justify-between  bg-[#F9F9F9] cursor-pointer rounded-md"
+                  onClick={() => setIsPaymentOpen(true)}
+                >
+                  <p className="text-black text-[14px] font-medium leading-5 cursor-pointer rounded-md">
+                    Payment
                   </p>
                   <ArrowRighSvg color="black" />
                 </div>
@@ -208,6 +227,13 @@ const SideMenu = ({ departments, user }: SideMenuProps) => {
         departments={departments}
         role={user.role}
         departmentId={user.departmentId}
+      />
+
+      <PaymentDialog
+        companyId={user.companyId}
+        isOpen={isPaymentOpen}
+        setIsOpen={setIsPaymentOpen}
+        email={user.email}
       />
     </>
   )
